@@ -1,4 +1,7 @@
 import React from 'react';
+import flood from '../../assets/flood.svg';
+import droplet from '../../assets/dropley.svg';
+import SidebarNearbySupport from "./SidebarNearbySupport.tsx";
 
 interface SidebarContentProps {
     currentCoords: {
@@ -31,49 +34,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                                                                   show3DBuildings,
                                                                   showPixelatedOverlay
                                                               }) => {
-    const facilities = [
-        {
-            title: "Fire Station 1",
-            distance: "0.8 km",
-            type: "fire",
-            typeLabel: "Fire"
-        },
-        {
-            title: "Barangay Hall",
-            distance: "0.3 km",
-            type: "barangay",
-            typeLabel: "Barangay"
-        },
-        {
-            title: "Emergency Center",
-            distance: "1.2 km",
-            type: "evacuation",
-            typeLabel: "Evacuation"
-        },
-        {
-            title: "Elementary School",
-            distance: "0.5 km",
-            type: "school",
-            typeLabel: "School"
-        },
-        {
-            title: "Health Center",
-            distance: "0.7 km",
-            type: "health",
-            typeLabel: "Health"
-        }
-    ];
 
-    const getFacilityTypeStyles = (type: string) => {
-        const styles = {
-            fire: "bg-red-50 text-red-600",
-            barangay: "bg-blue-50 text-blue-600",
-            evacuation: "bg-slate-50 text-slate-600",
-            school: "bg-yellow-50 text-yellow-600",
-            health: "bg-green-50 text-green-600"
-        };
-        return styles[type as keyof typeof styles] || "bg-gray-50 text-gray-600";
-    };
 
     const ToggleSwitch = ({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) => (
         <div
@@ -88,7 +49,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
     );
 
     return (
-        <div className="p-6 pb-5">
+        <div className=" p-6 pb-5">
             {/* Status Section */}
             <div className="mb-8">
                 <h2 className="text-xl font-bold text-[#066AAA] text-center mb-5">
@@ -99,8 +60,8 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                         <div className="text-xs text-slate-500 font-medium mb-4 uppercase tracking-wide">
                             Water Level
                         </div>
-                        <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-50 text-sky-500 text-2xl">
-                            💧
+                        <div className="flex justify-center mb-4">
+                            <img src={droplet} alt="droplet" className="w-20" />
                         </div>
                         <div className="text-xs font-semibold px-3 py-1.5 rounded-full bg-green-100 text-green-800 uppercase tracking-wide">
                             Normal
@@ -110,9 +71,10 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                         <div className="text-xs text-slate-500 font-medium mb-4 uppercase tracking-wide">
                             Flood Hazard
                         </div>
-                        <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-50 text-sky-500 text-2xl">
-                            🌊
-                        </div>
+                        <div className="flex justify-center mb-4">
+
+                        <img src={flood} alt="flood" className="w-20" />
+                            </div>
                         <div className="text-xs font-semibold px-3 py-1.5 rounded-full bg-green-100 text-green-800 uppercase tracking-wide">
                             No Flooding
                         </div>
@@ -120,27 +82,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                 </div>
             </div>
 
-            {/* Facilities Section */}
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-slate-800 text-center mb-5">
-                    Nearby Facilities
-                </h2>
-                {facilities.map((facility, index) => (
-                    <div key={index} className="flex items-center p-3 bg-white border border-slate-200 rounded-lg mb-2 shadow-sm">
-                        <div className="flex-1">
-                            <div className="text-sm font-medium text-slate-800 mb-1">
-                                {facility.title}
-                            </div>
-                            <div className="text-xs text-slate-500">
-                                {facility.distance}
-                            </div>
-                        </div>
-                        <div className={`px-2 py-1 rounded text-xs font-medium uppercase tracking-wide ${getFacilityTypeStyles(facility.type)}`}>
-                            {facility.typeLabel}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <SidebarNearbySupport></SidebarNearbySupport>
 
             {/* Map Controls Section */}
             <div className="mt-6 pt-5 border-t border-slate-200">
@@ -148,7 +90,6 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                     className="text-base font-semibold text-slate-800 mb-4 flex items-center cursor-pointer select-none"
                     onClick={toggleMapControls}
                 >
-                    <span className="mr-2 text-lg">🗺️</span>
                     Map Controls
                     <span className={`ml-auto text-xs text-slate-500 transition-transform duration-200 ${mapControlsExpanded ? 'rotate-180' : ''}`}>
                         ▼
