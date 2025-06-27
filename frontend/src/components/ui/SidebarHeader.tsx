@@ -17,7 +17,7 @@ type SidebarHeaderProps = {
 export const SidebarHeader = ({
                                   location,
                                   setLocation,
-                                  handleEmergencyCall,
+                                  // handleEmergencyCall,
                                   handleEvacuation,
                                   handleWeather,
                                   handleLocationSearch,
@@ -53,7 +53,7 @@ export const SidebarHeader = ({
                         boxShadow: '0 4px 15px rgba(6, 106, 170, 0.3), 0 2px 8px rgba(6, 106, 170, 0.15)',
                         backdropFilter: 'blur(10px)'
                     }}
-                    onClick={handleEmergencyCall}
+                    // onClick={handleEmergencyCall}
                 >
                     {/* Shine effect overlay */}
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
