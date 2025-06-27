@@ -1,13 +1,14 @@
 import emergencyIcon from '../../assets/emergency.svg';
 import weatherIcon from '../../assets/weather.svg';
 import evacuation from '../../assets/evac.svg';
+import { useEmergencyHandlers } from '../../hooks/useEmergencyHandlers.ts';
+import { EmergencyContacts } from '../ui/EmergencyContact.tsx';
+import { EvacuationRoutes } from '../ui/EvacuationRoute.tsx';
+import { WeatherAlerts } from '../ui/WeatherAlert.tsx';
 
 type SidebarHeaderProps = {
     location: string;
     setLocation: (location: string) => void;
-    handleEmergencyCall: () => void;
-    handleEvacuation: () => void;
-    handleWeather: () => void;
     handleLocationSearch: () => void;
     bantayGrad: string;
     locIcon: string;
@@ -17,14 +18,23 @@ type SidebarHeaderProps = {
 export const SidebarHeader = ({
                                   location,
                                   setLocation,
-                                  // handleEmergencyCall,
-                                  handleEvacuation,
-                                  handleWeather,
                                   handleLocationSearch,
                                   bantayGrad,
                                   locIcon,
                                   search
                               }: SidebarHeaderProps) => {
+    const {
+        showEmergencyContacts,
+        showEvacuationRoutes,
+        showWeatherAlerts,
+        handleEmergencyCall,
+        handleEvacuation,
+        handleWeather,
+        closeEmergencyContacts,
+        closeEvacuationRoutes,
+        closeWeatherAlerts
+    } = useEmergencyHandlers();
+
     return (
         <div className="p-5 border-b border-slate-200 bg-white">
             <div className="h-10 flex items-center justify-center w-full border-b border-blue-400 pb-4">
@@ -48,12 +58,12 @@ export const SidebarHeader = ({
 
             <div className="grid grid-cols-3 gap-3 mt-6">
                 <button
-                    className="group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0"
+                    className={`group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0 ${showEmergencyContacts ? 'ring-2 ring-white ring-opacity-50' : ''}`}
                     style={{
                         boxShadow: '0 4px 15px rgba(6, 106, 170, 0.3), 0 2px 8px rgba(6, 106, 170, 0.15)',
                         backdropFilter: 'blur(10px)'
                     }}
-                    // onClick={handleEmergencyCall}
+                    onClick={handleEmergencyCall}
                 >
                     {/* Shine effect overlay */}
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -74,7 +84,7 @@ export const SidebarHeader = ({
                 </button>
 
                 <button
-                    className="group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0"
+                    className={`group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0 ${showEvacuationRoutes ? 'ring-2 ring-white ring-opacity-50' : ''}`}
                     style={{
                         boxShadow: '0 4px 15px rgba(6, 106, 170, 0.3), 0 2px 8px rgba(6, 106, 170, 0.15)',
                         backdropFilter: 'blur(10px)'
@@ -100,7 +110,7 @@ export const SidebarHeader = ({
                 </button>
 
                 <button
-                    className="group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0"
+                    className={`group relative flex flex-col items-center justify-center p-5 bg-gradient-to-br from-[#066AAA] to-[#0D4F73] text-white border-none rounded-2xl cursor-pointer text-xs font-semibold transition-all duration-300 ease-out min-h-[90px] shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] active:translate-y-0 ${showWeatherAlerts ? 'ring-2 ring-white ring-opacity-50' : ''}`}
                     style={{
                         boxShadow: '0 4px 15px rgba(6, 106, 170, 0.3), 0 2px 8px rgba(6, 106, 170, 0.15)',
                         backdropFilter: 'blur(10px)'
@@ -118,13 +128,26 @@ export const SidebarHeader = ({
                         <div className="mb-2 p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors duration-300">
                             <img src={weatherIcon} alt="weather icon" className="w-8 h-8 filter drop-shadow-sm" />
                         </div>
-                        <span className="font-bold tracking-wide text-shadow-sm">Weather</span>
+                        <span className="font-bold tracking-wide text-shadow-sm">Alert</span>
                     </div>
 
                     {/* Subtle pulse animation */}
                     <div className="absolute inset-0 rounded-2xl bg-[#066AAA] opacity-0 group-hover:opacity-20 animate-pulse" />
                 </button>
             </div>
+
+            <EmergencyContacts
+                isVisible={showEmergencyContacts}
+                onClose={closeEmergencyContacts}
+            />
+            <EvacuationRoutes
+                isVisible={showEvacuationRoutes}
+                onClose={closeEvacuationRoutes}
+            />
+            <WeatherAlerts
+                isVisible={showWeatherAlerts}
+                onClose={closeWeatherAlerts}
+            />
         </div>
     );
 };
