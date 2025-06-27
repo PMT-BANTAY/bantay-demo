@@ -1,0 +1,140 @@
+{
+  "locations": [
+    {
+      "id": "loc_001",
+      "title": "Emergency Response Center",
+      "distance": "0.3 km away",
+      "category": "rescuer",
+      "tag": "FIRE STATION"
+    },
+    {
+      "id": "loc_002",
+      "title": "Local Government Unit",
+      "distance": "0.1 km away",
+      "category": "rescuer",
+      "tag": "BARANGAY HALL"
+    },
+    {
+      "id": "loc_003",
+      "title": "Community Safety Hub",
+      "distance": "0.5 km away",
+      "category": "rescuer",
+      "tag": "POLICE STATION"
+    },
+    {
+      "id": "loc_004",
+      "title": "Multi-Purpose Evacuation Center",
+      "distance": "0.2 km away",
+      "category": "evacuation",
+      "tag": "EVACUATION CENTER"
+    },
+    {
+      "id": "loc_005",
+      "title": "Covered Basketball Court",
+      "distance": "0.4 km away",
+      "category": "evacuation",
+      "tag": "SPORTS COMPLEX"
+    },
+    {
+      "id": "loc_006",
+      "title": "Community Center Hall",
+      "distance": "0.3 km away",
+      "category": "evacuation",
+      "tag": "COMMUNITY HALL"
+    },
+    {
+      "id": "loc_007",
+      "title": "Elementary Learning Center",
+      "distance": "0.2 km away",
+      "category": "school",
+      "tag": "ELEMENTARY SCHOOL"
+    },
+    {
+      "id": "loc_008",
+      "title": "Secondary Education Campus",
+      "distance": "0.6 km away",
+      "category": "school",
+      "tag": "HIGH SCHOOL"
+    },
+    {
+      "id": "loc_009",
+      "title": "Primary Healthcare Facility",
+      "distance": "0.2 km away",
+      "category": "medical",
+      "tag": "HEALTH CENTER"
+    },
+    {
+      "id": "loc_010",
+      "title": "General Medical Hospital",
+      "distance": "0.8 km away",
+      "category": "medical",
+      "tag": "HOSPITAL"
+    },
+    {
+      "id": "loc_011",
+      "title": "Maternal Care Clinic",
+      "distance": "0.4 km away",
+      "category": "medical",
+      "tag": "CLINIC"
+    },
+    {
+      "id": "loc_012",
+      "title": "City Administrative Office",
+      "distance": "0.7 km away",
+      "category": "government",
+      "tag": "CITY HALL"
+    },
+    {
+      "id": "loc_013",
+      "title": "Emergency Operations Center",
+      "distance": "0.5 km away",
+      "category": "emergency",
+      "tag": "DISASTER CENTER"
+    },
+    {
+      "id": "loc_014",
+      "title": "Red Cross Relief Station",
+      "distance": "0.3 km away",
+      "category": "emergency",
+      "tag": "RELIEF CENTER"
+    }
+  ],
+  "categoryConfig": {
+    "rescuer": {
+      "color": "border-l-sky-400",
+      "bgColor": "bg-sky-50",
+      "description": "Emergency responders and rescue services"
+    },
+    "evacuation": {
+      "color": "border-l-blue-500",
+      "bgColor": "bg-blue-50",
+      "description": "Safe shelters and evacuation centers"
+    },
+    "school": {
+      "color": "border-l-blue-700",
+      "bgColor": "bg-blue-100",
+      "description": "Educational institutions and learning centers"
+    },
+    "medical": {
+      "color": "border-l-blue-800",
+      "bgColor": "bg-blue-100",
+      "description": "Healthcare facilities and medical services"
+    },
+    "government": {
+      "color": "border-l-gray-500",
+      "bgColor": "bg-gray-50",
+      "description": "Government offices and administrative centers"
+    },
+    "emergency": {
+      "color": "border-l-red-500",
+      "bgColor": "bg-red-50",
+      "description": "Emergency relief and disaster response"
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-06-28",
+    "totalLocations": 14,
+    "coverageArea": "Marikina City Metro Manila"
+  }
+}
