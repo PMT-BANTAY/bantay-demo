@@ -24,7 +24,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ className = '' }) => {
                                 {/* Wave icon */}
                                 <img src={NavLogo} alt="logo" className="h-full w-15" />
                             </div>
-                            <span className="text-[#066AAA] text-xl font-semibold tracking-wide">
+                            <span className="text-[#066AAA] text-xl font-semibold tracking-wide arame">
                                 BANTAY
                             </span>
                         </Link>

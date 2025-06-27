@@ -15,7 +15,7 @@ const Showcase: React.FC = () => {
 
             {/* Main heading */}
             <div className="text-center px-8 mb-12">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 leading-tight mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 leading-tight mb-6 geo-medium">
                     Transforming Flood Response<br />
                     Through Predictive Intelligence
                 </h1>
@@ -30,7 +30,7 @@ const Showcase: React.FC = () => {
             <div className="px-8 py-16">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mb-6 geo-medium">
                         Stay ahead of the floods.
                     </h2>
                     <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
@@ -58,7 +58,7 @@ const Showcase: React.FC = () => {
 
                         {/* Card Content */}
                         <div className="relative z-10 p-8 md:p-12 h-80 flex flex-col justify-between">
-                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 geo-medium">
                                 The Problem<br />We Solve
                             </h3>
                             <p className="text-white/90 text-sm md:text-base leading-relaxed">
@@ -82,7 +82,7 @@ const Showcase: React.FC = () => {
 
                         {/* Card Content */}
                         <div className="relative z-10 p-8 md:p-12 h-80 flex flex-col justify-between">
-                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 geo-medium">
                                 Our Solution
                             </h3>
                             <p className="text-white/90 text-sm md:text-base leading-relaxed">

@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Geomanist', Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -14,13 +14,31 @@
 }
 
 @font-face {
-  font-family: 'Oarame';
-  src: url('/fonts/Arame-Regular.ttf') format('truetype');
+  font-family: 'Geomanist';
+  src: url('/Geomanist-Regular.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-.oarame {
+@font-face {
+  font-family: 'Geomanist-Medium';
+  src: url('/geomanist-medium.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.geo-medium {
+  font-family: 'Geomanist-Medium', sans-serif;
+}
+
+@font-face {
+  font-family: 'Arame';
+  src: url('/Arame-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.arame {
   font-family: 'Arame', sans-serif;
 }
 

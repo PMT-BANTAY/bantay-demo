@@ -32,7 +32,7 @@ const SystemHighlights = () => {
                                         <img src={WaterMonitor} alt={"Water Monitor"} className="w-full h-full object-cover rounded-lg" />
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2">INTERACTIVE FLOOD MAP</h3>
+                                <h3 className="text-xl font-bold text-white mb-2 arame">INTERACTIVE FLOOD MAP</h3>
                                 <p className="text-white/90 text-sm leading-relaxed">
                                     Real-time colored mesh grid showing current flood propagation
                                     based on water level monitoring data
@@ -44,7 +44,7 @@ const SystemHighlights = () => {
                                 <div className="bg-white rounded-lg h-64 mb-4 relative z-20 overflow-hidden">
                                     <img src={Evacuation} alt={"Evacuation"} className="w-full h-full object-cover rounded-lg" />
                                 </div>
-                                <h3 className="text-lg font-bold text-white mb-2">EVACUATION ROUTING</h3>
+                                <h3 className="text-lg font-bold text-white mb-2 arame">EVACUATION ROUTING</h3>
                                 <p className="text-white/90 text-sm leading-relaxed">
                                     Dynamic pathfinding to nearest safe evacuation centers based on
                                     current flood conditions
@@ -56,8 +56,8 @@ const SystemHighlights = () => {
                         <div className="space-y-8 w-full">
                             {/* Header moved to right column */}
                             <div className="text-right pt-8 mb-8">
-                                <h1 className="text-7xl font-bold text-white mb-2">System</h1>
-                                <h1 className="text-7xl font-bold text-white">Highlights</h1>
+                                <h1 className="text-7xl font-bold text-white mb-2 geo-medium">System</h1>
+                                <h1 className="text-7xl font-bold text-white geo-medium">Highlights</h1>
                             </div>
 
                             {/* Alert System */}
@@ -65,7 +65,7 @@ const SystemHighlights = () => {
                                 <div className="bg-white rounded-lg h-64 mb-4 relative z-20 overflow-hidden">
                                     <img src={Email} alt={"email update"} className="w-full h-full object-cover rounded-lg" />
                                 </div>
-                                <h3 className="text-lg font-bold text-white mb-2">ALERT SYSTEM</h3>
+                                <h3 className="text-lg font-bold text-white mb-2 arame">ALERT SYSTEM</h3>
                                 <p className="text-white/90 text-sm leading-relaxed">
                                     Automated notifications and warnings sent to residents
                                     in affected areas via multiple channels
@@ -78,7 +78,7 @@ const SystemHighlights = () => {
                                     <img src={WaterLevel} alt="Water Level" className="w-full h-full object-cover rounded-lg"/>
                                 </div>
 
-                                <h3 className="text-lg font-bold text-white mb-2">WATER LEVEL MONITORING</h3>
+                                <h3 className="text-lg font-bold text-white mb-2 arame">WATER LEVEL MONITORING</h3>
                                 <p className="text-white/90 text-sm leading-relaxed">
                                     Real-time sensor data from multiple monitoring stations
                                     across the flood-prone areas
