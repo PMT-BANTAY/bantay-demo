@@ -36,7 +36,7 @@ export const SidebarHeader = ({
     } = useEmergencyHandlers();
 
     return (
-        <div className="p-5 border-b border-slate-200 bg-white">
+        <div className="p-5 border-b border-slate-200 ">
             <div className="h-10 flex items-center justify-center w-full border-b border-blue-400 pb-4">
                 <img src={bantayGrad} alt="bantay logo" className="w-16" />
             </div>
