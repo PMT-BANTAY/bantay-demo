@@ -1,0 +1,275 @@
+[
+  {
+    "sensor": "Burgos 11102203",
+    "status": "alert",
+    "centroid": [14.72193, 121.14452],
+    "tiles": [
+      { "centroid": [14.72193, 121.14452], "status": "alert" },
+      { "centroid": [14.72195, 121.14454], "status": "alert" },
+      { "centroid": [14.72191, 121.14450], "status": "alert" },
+      { "centroid": [14.72197, 121.14456], "status": "alert" },
+      { "centroid": [14.72189, 121.14448], "status": "alert" },
+      { "centroid": [14.72199, 121.14458], "status": "alert" },
+      { "centroid": [14.72187, 121.14446], "status": "alert" },
+      { "centroid": [14.72201, 121.14460], "status": "alert" },
+      { "centroid": [14.72185, 121.14444], "status": "alert" },
+      { "centroid": [14.72203, 121.14462], "status": "alert" }
+    ]
+  },
+  {
+    "sensor": "La Mesa Dam 11302201",
+    "status": "alarm",
+    "centroid": [14.71425, 121.07409],
+    "tiles": [
+      { "centroid": [14.71425, 121.07409], "status": "alert" },
+      { "centroid": [14.71427, 121.07411], "status": "alert" },
+      { "centroid": [14.71423, 121.07407], "status": "alert" },
+      { "centroid": [14.71429, 121.07413], "status": "alarm" },
+      { "centroid": [14.71421, 121.07405], "status": "alarm" },
+      { "centroid": [14.71431, 121.07415], "status": "alarm" },
+      { "centroid": [14.71419, 121.07403], "status": "alarm" },
+      { "centroid": [14.71433, 121.07417], "status": "alarm" },
+      { "centroid": [14.71417, 121.07401], "status": "alarm" },
+      { "centroid": [14.71435, 121.07419], "status": "alarm" }
+    ]
+  },
+  {
+    "sensor": "Mindanao 11203201",
+    "status": "critical",
+    "centroid": [14.66715, 121.03472],
+    "tiles": [
+      { "centroid": [14.66715, 121.03472], "status": "alert" },
+      { "centroid": [14.66717, 121.03474], "status": "alarm" },
+      { "centroid": [14.66713, 121.03470], "status": "critical" },
+      { "centroid": [14.66719, 121.03476], "status": "alarm" },
+      { "centroid": [14.66711, 121.03468], "status": "critical" },
+      { "centroid": [14.66721, 121.03478], "status": "critical" },
+      { "centroid": [14.66709, 121.03466], "status": "critical" },
+      { "centroid": [14.66723, 121.03480], "status": "critical" },
+      { "centroid": [14.66707, 121.03464], "status": "critical" },
+      { "centroid": [14.66725, 121.03482], "status": "critical" }
+    ]
+  },
+  {
+    "sensor": "Montalban 11102202",
+    "status": "alert",
+    "centroid": [14.73311, 121.13053],
+    "tiles": [
+      { "centroid": [14.73311, 121.13053], "status": "alert" },
+      { "centroid": [14.73313, 121.13055], "status": "alarm" },
+      { "centroid": [14.73309, 121.13051], "status": "critical" },
+      { "centroid": [14.73315, 121.13057], "status": "alarm" },
+      { "centroid": [14.73307, 121.13049], "status": "critical" },
+      { "centroid": [14.73317, 121.13059], "status": "alarm" },
+      { "centroid": [14.73305, 121.13047], "status": "critical" },
+      { "centroid": [14.73319, 121.13061], "status": "alert" },
+      { "centroid": [14.73303, 121.13045], "status": "alert" },
+      { "centroid": [14.73321, 121.13063], "status": "alert" }
+    ]
+  },
+  {
+    "sensor": "Nangka 11103202",
+    "status": "alarm",
+    "centroid": [14.67401, 121.10932],
+    "tiles": [
+      { "centroid": [14.67401, 121.10932], "status": "alert" },
+      { "centroid": [14.67403, 121.10934], "status": "alert" },
+      { "centroid": [14.67399, 121.10930], "status": "alert" },
+      { "centroid": [14.67405, 121.10936], "status": "alarm" },
+      { "centroid": [14.67397, 121.10928], "status": "alarm" },
+      { "centroid": [14.67407, 121.10938], "status": "alarm" },
+      { "centroid": [14.67395, 121.10926], "status": "alarm" },
+      { "centroid": [14.67409, 121.10940], "status": "alarm" },
+      { "centroid": [14.67393, 121.10924], "status": "alarm" },
+      { "centroid": [14.67411, 121.10942], "status": "alarm" }
+    ]
+  },
+  {
+    "sensor": "Napindan-1 11201201",
+    "status": "critical",
+    "centroid": [14.55383, 121.07604],
+    "tiles": [
+      { "centroid": [14.55383, 121.07604], "status": "alert" },
+      { "centroid": [14.55385, 121.07606], "status": "alarm" },
+      { "centroid": [14.55381, 121.07602], "status": "critical" },
+      { "centroid": [14.55387, 121.07608], "status": "alarm" },
+      { "centroid": [14.55379, 121.07600], "status": "critical" },
+      { "centroid": [14.55389, 121.07610], "status": "critical" },
+      { "centroid": [14.55377, 121.07598], "status": "critical" },
+      { "centroid": [14.55391, 121.07612], "status": "critical" },
+      { "centroid": [14.55375, 121.07596], "status": "critical" },
+      { "centroid": [14.55393, 121.07614], "status": "critical" }
+    ]
+  },
+  {
+    "sensor": "Pandacan 11204201",
+    "status": "alert",
+    "centroid": [14.58957, 121.01224],
+    "tiles": [
+      { "centroid": [14.58957, 121.01224], "status": "alert" },
+      { "centroid": [14.58959, 121.01226], "status": "alarm" },
+      { "centroid": [14.58955, 121.01222], "status": "critical" },
+      { "centroid": [14.58961, 121.01228], "status": "alarm" },
+      { "centroid": [14.58953, 121.01220], "status": "critical" },
+      { "centroid": [14.58963, 121.01230], "status": "alert" },
+      { "centroid": [14.58951, 121.01218], "status": "alert" },
+      { "centroid": [14.58965, 121.01232], "status": "alert" },
+      { "centroid": [14.58949, 121.01216], "status": "alert" },
+      { "centroid": [14.58967, 121.01234], "status": "alert" }
+    ]
+  },
+  {
+    "sensor": "People's Park 11203202",
+    "status": "alarm",
+    "centroid": [14.62947, 121.01492],
+    "tiles": [
+      { "centroid": [14.62947, 121.01492], "status": "alert" },
+      { "centroid": [14.62949, 121.01494], "status": "alarm" },
+      { "centroid": [14.62945, 121.01490], "status": "critical" },
+      { "centroid": [14.62951, 121.01496], "status": "alarm" },
+      { "centroid": [14.62943, 121.01488], "status": "critical" },
+      { "centroid": [14.62953, 121.01498], "status": "alarm" },
+      { "centroid": [14.62941, 121.01486], "status": "alarm" },
+      { "centroid": [14.62955, 121.01500], "status": "alarm" },
+      { "centroid": [14.62939, 121.01484], "status": "alarm" },
+      { "centroid": [14.62957, 121.01502], "status": "alarm" }
+    ]
+  },
+  {
+    "sensor": "Quirino 11302202",
+    "status": "critical",
+    "centroid": [14.71867, 121.04011],
+    "tiles": [
+      { "centroid": [14.71867, 121.04011], "status": "alert" },
+      { "centroid": [14.71869, 121.04013], "status": "alarm" },
+      { "centroid": [14.71865, 121.04009], "status": "critical" },
+      { "centroid": [14.71871, 121.04015], "status": "alarm" },
+      { "centroid": [14.71863, 121.04007], "status": "critical" },
+      { "centroid": [14.71873, 121.04017], "status": "critical" },
+      { "centroid": [14.71861, 121.04005], "status": "critical" },
+      { "centroid": [14.71875, 121.04019], "status": "critical" },
+      { "centroid": [14.71859, 121.04003], "status": "critical" },
+      { "centroid": [14.71877, 121.04021], "status": "critical" }
+    ]
+  },
+  {
+    "sensor": "Rodriguez 11102201",
+    "status": "alert",
+    "centroid": [14.73748, 121.15467],
+    "tiles": [
+      { "centroid": [14.73748, 121.15467], "status": "alert" },
+      { "centroid": [14.73750, 121.15469], "status": "alarm" },
+      { "centroid": [14.73746, 121.15465], "status": "critical" },
+      { "centroid": [14.73752, 121.15471], "status": "alarm" },
+      { "centroid": [14.73744, 121.15463], "status": "critical" },
+      { "centroid": [14.73754, 121.15473], "status": "alert" },
+      { "centroid": [14.73742, 121.15461], "status": "alert" },
+      { "centroid": [14.73756, 121.15475], "status": "alert" },
+      { "centroid": [14.73740, 121.15459], "status": "alert" },
+      { "centroid": [14.73758, 121.15477], "status": "alert" }
+    ]
+  },
+  {
+    "sensor": "Rosario Bridge 11106201",
+    "status": "alarm",
+    "centroid": [14.59030, 121.08302],
+    "tiles": [
+      { "centroid": [14.59030, 121.08302], "status": "alert" },
+      { "centroid": [14.59032, 121.08304], "status": "alarm" },
+      { "centroid": [14.59028, 121.08300], "status": "critical" },
+      { "centroid": [14.59034, 121.08306], "status": "alarm" },
+      { "centroid": [14.59026, 121.08298], "status": "critical" },
+      { "centroid": [14.59036, 121.08308], "status": "alarm" },
+      { "centroid": [14.59024, 121.08296], "status": "alarm" },
+      { "centroid": [14.59038, 121.08310], "status": "alarm" },
+      { "centroid": [14.59022, 121.08294], "status": "alarm" },
+      { "centroid": [14.59040, 121.08312], "status": "alarm" }
+    ]
+  },
+  {
+    "sensor": "San Juan School 11203203",
+    "status": "critical",
+    "centroid": [14.60703, 121.02203],
+    "tiles": [
+      { "centroid": [14.60703, 121.02203], "status": "alert" },
+      { "centroid": [14.60705, 121.02205], "status": "alarm" },
+      { "centroid": [14.60701, 121.02201], "status": "critical" },
+      { "centroid": [14.60707, 121.02207], "status": "alarm" },
+      { "centroid": [14.60699, 121.02199], "status": "critical" },
+      { "centroid": [14.60709, 121.02209], "status": "critical" },
+      { "centroid": [14.60697, 121.02197], "status": "critical" },
+      { "centroid": [14.60711, 121.02211], "status": "critical" },
+      { "centroid": [14.60695, 121.02195], "status": "critical" },
+      { "centroid": [14.60713, 121.02213], "status": "critical" }
+    ]
+  },
+  {
+    "sensor": "San Mateo-1 11103201",
+    "status": "alert",
+    "centroid": [14.67952, 121.10973],
+    "tiles": [
+      { "centroid": [14.67952, 121.10973], "status": "alert" },
+      { "centroid": [14.67954, 121.10975], "status": "alarm" },
+      { "centroid": [14.67950, 121.10971], "status": "critical" },
+      { "centroid": [14.67956, 121.10977], "status": "alarm" },
+      { "centroid": [14.67948, 121.10969], "status": "critical" },
+      { "centroid": [14.67958, 121.10979], "status": "alert" },
+      { "centroid": [14.67946, 121.10967], "status": "alert" },
+      { "centroid": [14.67960, 121.10981], "status": "alert" },
+      { "centroid": [14.67944, 121.10965], "status": "alert" },
+      { "centroid": [14.67962, 121.10983], "status": "alert" }
+    ]
+  },
+  {
+    "sensor": "Sto Nino 11104201",
+    "status": "alarm",
+    "centroid": [14.63601, 121.09280],
+    "tiles": [
+      { "centroid": [14.63601, 121.09280], "status": "alert" },
+      { "centroid": [14.63603, 121.09282], "status": "alarm" },
+      { "centroid": [14.63599, 121.09278], "status": "critical" },
+      { "centroid": [14.63605, 121.09284], "status": "alarm" },
+      { "centroid": [14.63597, 121.09276], "status": "critical" },
+      { "centroid": [14.63607, 121.09286], "status": "alarm" },
+      { "centroid": [14.63595, 121.09274], "status": "alarm" },
+      { "centroid": [14.63609, 121.09288], "status": "alarm" },
+      { "centroid": [14.63593, 121.09272], "status": "alarm" },
+      { "centroid": [14.63611, 121.09290], "status": "alarm" }
+    ]
+  },
+  {
+    "sensor": "Tumana Bridge 11103203",
+    "status": "critical",
+    "centroid": [14.65649, 121.09639],
+    "tiles": [
+      { "centroid": [14.65649, 121.09639], "status": "alert" },
+      { "centroid": [14.65651, 121.09641], "status": "alarm" },
+      { "centroid": [14.65647, 121.09637], "status": "critical" },
+      { "centroid": [14.65653, 121.09643], "status": "alarm" },
+      { "centroid": [14.65645, 121.09635], "status": "critical" },
+      { "centroid": [14.65655, 121.09645], "status": "critical" },
+      { "centroid": [14.65643, 121.09633], "status": "critical" },
+      { "centroid": [14.65657, 121.09647], "status": "critical" },
+      { "centroid": [14.65641, 121.09631], "status": "critical" },
+      { "centroid": [14.65659, 121.09649], "status": "critical" }
+      
+    ]
+  },
+  {
+    "sensor": "Ugong 11303201",
+    "status": "alert",
+    "centroid": [14.68629, 121.00202],
+    "tiles": [
+      { "centroid": [14.68629, 121.00202], "status": "alert" },
+      { "centroid": [14.68631, 121.00204], "status": "alarm" },
+      { "centroid": [14.68627, 121.00200], "status": "critical" },
+      { "centroid": [14.68633, 121.00206], "status": "alarm" },
+      { "centroid": [14.68625, 121.00198], "status": "critical" },
+      { "centroid": [14.68635, 121.00208], "status": "alert" },
+      { "centroid": [14.68623, 121.00196], "status": "alert" },
+      { "centroid": [14.68637, 121.00210], "status": "alert" },
+      { "centroid": [14.68621, 121.00194], "status": "alert" },
+      { "centroid": [14.68639, 121.00212], "status": "alert" }
+    ]
+  }
+]

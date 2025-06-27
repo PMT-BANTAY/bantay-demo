@@ -1,0 +1,254 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.1093, 14.6740]
+      },
+      "properties": {
+        "name": "Nangka / Torres Amado Creek",
+        "location": "Valenzuela City",
+        "facilities": [
+          "Malanday National High School",
+          "Malanday Fire Substation",
+          "Nangka Barangay Hall",
+          "St. Mattheus Hospital",
+          "Area B Covered Court 96 Session Rd, Quezon City, Metro Manila"
+        ],
+        "source": "PBBM Valenzuela visit"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0760, 14.5538]
+      },
+      "properties": {
+        "name": "Napindan-1",
+        "location": "Pasig City",
+        "facilities": [
+          "Senior Citizen's Building H33F+CVX, San Bernardo, St, Pasig, Metro Manila",
+          "San Joaquin Elementary School",
+          "Pasig Fire Station – Napindan"
+        ],
+        "source": "Pasig DRRM Plan 2023–28"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0122, 14.5896]
+      },
+      "properties": {
+        "name": "Pandacan",
+        "location": "Manila",
+        "facilities": [
+          "Fr. Pierre Tritz Institute - ERDA Technical And Vocational Secondary School",
+          "839 Barangay Hall (Manila)",
+          "Pandacan Fire Station",
+          "Barangay 837 Health Center",
+          "Pandacan Covered Court (Quirino Ave near Beata)"
+        ],
+        "source": "Manila DRRM Office"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0149, 14.6295]
+      },
+      "properties": {
+        "name": "People's Park / Quezon Ave",
+        "location": "Quezon City",
+        "facilities": [
+          "QC Science High School (nearby)",
+          "St. Luke's Medical Center Quezon City",
+          "De Los Santos Medical Center",
+          "St. Luke's College of Medicine",
+          "General Roxas Health Center",
+          "Roxas District Barangay Hall",
+          "General Roxas Elementary School",
+          "Holy Family Parochial School",
+          "Paligsahan Health Center",
+          "Galas Fire Station",
+          "Jacinto Covered Court",
+          "Our Lady of Sacred Heart School",
+          "Aurora A. Quezon Elementary School",
+          "Dona Aurora Barangay Hall",
+          "Brgy. 541 Zone 53 Barangay Hall",
+          "Quezon Ave Covered Court (beside People's Park)"
+        ],
+        "source": "QC LGU Monsoon Guidelines"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0401, 14.7187]
+      },
+      "properties": {
+        "name": "Quirino / Tullahan River (QC – Baesa area)",
+        "location": "Quezon City",
+        "facilities": [
+          "Metro Manila College, Inc.",
+          "Barangay Nagkaisang Nayon Hall",
+          "Baesa Health Center",
+          "Bestlink College of the Philippines",
+          "International Christian School of Quezon City",
+          "Quezon City University - Main",
+          "San Bartolome Barangay Hall",
+          "Q.C.P.U Technical & Vocational",
+          "San Bartolome Elementary School",
+          "St John of Beverly"
+        ],
+        "source": "Barangay DRRM and school maps"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.1547, 14.7375]
+      },
+      "properties": {
+        "name": "Rodriguez / Eastwood Bridge",
+        "location": "Marikina",
+        "facilities": [
+          "Montalban Medical and Diagnostic Services Inc.",
+          "Barangay Balite Barangay Hall",
+          "Rodriguez Municipal Hall",
+          "BARANGAY SAN RAFAEL, BARANGAY HALL",
+          "St. Joseph's College Of Rodriguez Inc.",
+          "Eulogio Rodriguez Elementary School",
+          "Geronimo Elementary School"
+        ],
+        "source": "Not specified"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0830, 14.5903]
+      },
+      "properties": {
+        "name": "Rosario Bridge",
+        "location": "Pasig",
+        "facilities": [
+          "Rosario Elementary School",
+          "Rosario Health Center",
+          "Rosario Fire Substation",
+          "Rosario Covered Court (near Karangalan Market)",
+          "Pasig Green Pasture Christian School Inc.",
+          "Eusebio High School"
+        ],
+        "source": "Pasig LGU Facilities Map"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0220, 14.6070]
+      },
+      "properties": {
+        "name": "San Juan School",
+        "location": "San Juan City",
+        "facilities": [
+          "San Juan Academic Senior HS",
+          "San Juan Elementary School",
+          "San Juan Health Center",
+          "San Juan Central Fire Station",
+          "San Juan City Sports Complex / Covered Court"
+        ],
+        "source": "San Juan City DRRM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.1097, 14.6795]
+      },
+      "properties": {
+        "name": "San Mateo-1 / Batasan Bridge",
+        "location": "San Mateo/Quezon City",
+        "facilities": [
+          "San Mateo National High School",
+          "Batasan Health Center",
+          "San Mateo Fire Station (BFP Rizal)",
+          "Batasan Hills Covered Court / Area B Court",
+          "Old Barangay Batasan Hills"
+        ],
+        "source": "Quezon City DRRM & San Mateo LGU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0928, 14.6360]
+      },
+      "properties": {
+        "name": "Sto Niño / Marikina Bridge",
+        "location": "Marikina",
+        "facilities": [
+          "Sto Niño Elementary School",
+          "Xavier Technical Training Center Corporation - Marikina Branch",
+          "Jesus Dela Peña Barangay Hall",
+          "Marikina West Health Center",
+          "Marikina Central Fire Station",
+          "Santa Elena High School",
+          "Marikina Polytechnic College"
+        ],
+        "source": "Marikina City Flood Bulletin, GMA News 2024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0964, 14.6565]
+      },
+      "properties": {
+        "name": "Tumana Bridge",
+        "location": "Marikina",
+        "facilities": [
+          "Concepcion Integrated School",
+          "Tumana Good Seed Christian Academy",
+          "H. Bautista Elementary School",
+          "Marikina South Fire Station",
+          "Marikina Polytechnic College",
+          "Santa Elena High School"
+        ],
+        "source": "July 2024 evacuations, PIA News, Manila Standard"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0020, 14.6863]
+      },
+      "properties": {
+        "name": "Ugong / Tullahan-Ugong Bridge",
+        "location": "Valenzuela City",
+        "facilities": [
+          "Baesa Adventist Elementary School & Baesa Adventist Academy",
+          "Immaculate Conception Academy-Greenhills",
+          "Ugong Norte Health Center",
+          "Words of Wisdom Christian Academy",
+          "Valenzuela City Fire Substation – Ugong Norte",
+          "Ugong Norte Covered Court (multipurpose gym)"
+        ],
+        "source": "Not specified"
+      }
+    }
+  ]
+}

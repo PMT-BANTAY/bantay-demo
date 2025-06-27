@@ -1,0 +1,229 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Burgos 11102203",
+        "location": "Beneath the Gov. Juarez Bridge",
+        "alert_level": 27.4,
+        "alarm_level": 27.9,
+        "critical_level": 28.4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.14451775900919, 14.721928675266112]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "La Mesa Dam 11302201",
+        "location": "Near the Bell-Mouth Spillway in La Mesa Dam",
+        "alert_level": 79.0,
+        "alarm_level": 79.3,
+        "critical_level": 79.5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.07409010775784, 14.714249649052126]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Mindanao 11203201",
+        "location": "Beneath the Mindanao Ave Ext Road, San Juan River",
+        "alert_level": 33.0,
+        "alarm_level": 34.0,
+        "critical_level": 35.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.03472367931307, 14.667145792532219]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Montalban 11102202",
+        "location": "Beneath the San Jose Bridge",
+        "alert_level": 22.4,
+        "alarm_level": 23.0,
+        "critical_level": 23.6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.13053439072915, 14.733109164266912]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Nangka 11103202",
+        "location": "Near the Torres Amado Creek endflow",
+        "alert_level": 16.5,
+        "alarm_level": 17.1,
+        "critical_level": 17.7
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.10931721871601, 14.67400784115815]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Napindan-1 11201201",
+        "location": "Beneath A. Luna Bridge",
+        "alert_level": 13.5,
+        "alarm_level": 14.0,
+        "critical_level": 14.5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.07604187464065, 14.553831842596358]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Pandacan 11204201",
+        "location": "Beneath Metro Manila Skyway, Near Beata Elementary School",
+        "alert_level": 12.0,
+        "alarm_level": 12.5,
+        "critical_level": 13.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.01224071026323, 14.58956925106834]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "People's Park 11203202",
+        "location": "Beneath Quezon Ave Bridge, Near People's Park",
+        "alert_level": 14.0,
+        "alarm_level": 15.0,
+        "critical_level": 16.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.01492116186722, 14.629468181852339]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Quirino 11302202",
+        "location": "Along the Tullahan River",
+        "alert_level": 39.0,
+        "alarm_level": 40.0,
+        "critical_level": 41.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.04011334626817, 14.718666040933476]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Rodriguez 11102201",
+        "location": "Along the Marikina River, beneath the Eastwood Bridge, near the water level gauging station",
+        "alert_level": 28.8,
+        "alarm_level": 29.8,
+        "critical_level": 30.7
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.1546717168421, 14.737479710313258]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Rosario Bridge 11106201",
+        "location": "Beneath the Rosario Bridge",
+        "alert_level": 13.0,
+        "alarm_level": 13.5,
+        "critical_level": 14.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0830242075019, 14.5902960051049]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "San Juan School 11203203",
+        "location": "Near San Juan City Academic Senior High School",
+        "alert_level": 12.0,
+        "alarm_level": 12.5,
+        "critical_level": 13.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0220280014154, 14.607030040815836]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "San Mateo-1 11103201",
+        "location": "Beneath the Batasan-San Mateo Bridge (1997)",
+        "alert_level": 18.0,
+        "alarm_level": 19.0,
+        "critical_level": 20.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.10972533463467, 14.679517221060765]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Sto Nino 11104201",
+        "location": "Beneath the Marikina Bridge",
+        "alert_level": 15.0,
+        "alarm_level": 16.0,
+        "critical_level": 17.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.0927960873786, 14.636014248039292]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Tumana Bridge 11103203",
+        "location": "Beneath the Tumana Bridge",
+        "alert_level": 17.26,
+        "alarm_level": 18.26,
+        "critical_level": 19.26
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.09639007199125, 14.656487767045041]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sensor_id": "Ugong 11303201",
+        "location": "Beneath the Tullahan-Ugong Bridge along the Caloocan/Valenzuela boundary",
+        "alert_level": 14.85,
+        "alarm_level": 15.7,
+        "critical_level": 16.6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.00202178493423, 14.686290631058755]
+      }
+    }
+  ]
+}
