@@ -437,6 +437,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       <EvacuationRoutes
         isVisible={showEvacuationRoutes}
         onClose={closeEvacuationRoutes}
+        currentLocation={currentLocation}
       />
       <WeatherAlerts
         isVisible={showWeatherAlerts}
