@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 from constants import WATER_LEVEL_SENSORS_LOC_DICT
-from utils import fetch_all_water_levels, enhanced_flood_mapping, calculate_nearest_facilities, SIMULATION_MODE, SIMULATION_SCENARIOS
+from utils import fetch_all_water_levels, enhanced_flood_mapping, calculate_nearest_facilities, calculate_distance, SIMULATION_MODE, SIMULATION_SCENARIOS
 import logging
 import asyncio
 import json
@@ -619,6 +619,153 @@ async def find_nearest_facilities(search: LocationSearch):
             detail={
                 "status": "error",
                 "message": f"Failed to find nearest facilities: {str(e)}",
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+class EvacuationRouteRequest(BaseModel):
+    latitude: float
+    longitude: float
+    max_distance: float = 5000  # Default 5km radius
+
+@app.post("/evacuation-routes/")
+async def get_evacuation_routes(request: EvacuationRouteRequest):
+    """
+    Get evacuation routes to the nearest three evacuation centers
+    """
+    try:
+        # Load facilities data
+        with open("../frontend/src/components/config/locations.json") as f:
+            locations_data = json.load(f)
+        
+        # Filter evacuation centers
+        evacuation_centers = []
+        for loc in locations_data["locations"]:
+            if loc["category"] == "evacuation":
+                # For demo, generate coordinates around the search point
+                center = {
+                    "id": loc["id"],
+                    "title": loc["title"],
+                    "tag": loc["tag"],
+                    "latitude": request.latitude + (random.random() - 0.5) * 0.02,
+                    "longitude": request.longitude + (random.random() - 0.5) * 0.02
+                }
+                evacuation_centers.append(center)
+        
+        # Calculate distances and sort
+        for center in evacuation_centers:
+            distance = calculate_distance(
+                request.latitude,
+                request.longitude,
+                center["latitude"],
+                center["longitude"]
+            )
+            center["distance"] = distance
+            # Calculate estimated walk time (assuming average walking speed of 5km/h)
+            walk_time_hours = distance / 5000  # Convert meters to hours at 5km/h
+            walk_time_minutes = int(walk_time_hours * 60)
+            center["walk_time"] = f"{walk_time_minutes} mins walk"
+        
+        # Sort by distance and take top 3
+        evacuation_centers.sort(key=lambda x: x["distance"])
+        nearest_centers = evacuation_centers[:3]
+        
+        # Format routes
+        routes = []
+        for i, center in enumerate(nearest_centers):
+            route_type = "Primary Route" if i == 0 else "Secondary Route" if i == 1 else "Alternate Route"
+            routes.append({
+                "name": route_type,
+                "destination": f"To: {center['title']}",
+                "walkTime": center["walk_time"],
+                "coordinates": {
+                    "start": {"lat": request.latitude, "lng": request.longitude},
+                    "end": {"lat": center["latitude"], "lng": center["longitude"]}
+                }
+            })
+        
+        return {
+            "status": "success",
+            "timestamp": datetime.now().isoformat(),
+            "routes": routes
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting evacuation routes: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "status": "error",
+                "message": f"Failed to get evacuation routes: {str(e)}",
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+@app.get("/high-water-alerts/")
+async def get_high_water_alerts():
+    """
+    Get sensors with highest water levels
+    """
+    try:
+        # Get current water levels
+        water_levels = await fetch_all_water_levels()
+        
+        # Sort sensors by water level
+        sorted_sensors = sorted(
+            water_levels,
+            key=lambda x: x.get('current_water_level', 0),
+            reverse=True
+        )
+        
+        # Take top 3 highest water levels
+        high_alerts = []
+        for sensor in sorted_sensors[:3]:
+            # Get threshold levels from constants
+            sensor_config = WATER_LEVEL_SENSORS_LOC_DICT.get(sensor['name'], {})
+            critical = sensor_config.get('critical', 0)
+            alarm = sensor_config.get('alarm', 0)
+            alert = sensor_config.get('alert', 0)
+            
+            # Determine status based on water level
+            current_level = sensor.get('current_water_level', 0)
+            if current_level >= critical:
+                status = "CRITICAL"
+                color = "red"
+            elif current_level >= alarm:
+                status = "WARNING"
+                color = "orange"
+            elif current_level >= alert:
+                status = "ALERT"
+                color = "yellow"
+            else:
+                status = "NORMAL"
+                color = "green"
+            
+            high_alerts.append({
+                "name": sensor['name'],
+                "water_level": current_level,
+                "status": status,
+                "color": color,
+                "timestamp": sensor.get('timestamp', datetime.now().isoformat()),
+                "location": {
+                    "latitude": sensor_config.get('centroid', [0, 0])[0],
+                    "longitude": sensor_config.get('centroid', [0, 0])[1]
+                }
+            })
+        
+        return {
+            "status": "success",
+            "timestamp": datetime.now().isoformat(),
+            "alerts": high_alerts
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting high water alerts: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "status": "error",
+                "message": f"Failed to get high water alerts: {str(e)}",
                 "timestamp": datetime.now().isoformat()
             }
         ) 
