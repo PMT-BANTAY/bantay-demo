@@ -8,6 +8,7 @@ import { EmergencyContacts } from '../ui/EmergencyContact';
 import { EvacuationRoutes } from '../ui/EvacuationRoute';
 import { WeatherAlerts } from '../ui/WeatherAlert';
 import SidebarNearbySupport from '../ui/SidebarNearbySupport';
+import {SidebarAreaStatus} from "./SidebarAreaStatus.tsx";
 
 // Types
 interface LocationSuggestion {
@@ -15,7 +16,7 @@ interface LocationSuggestion {
   place_name: string;
   text: string;
   center: [number, number];
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
 }
 
 interface MapboxResponse {
@@ -260,7 +261,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   };
 
   return (
-    <div className="p-5 border-b border-slate-200">
+    <div className="p-5  border-slate-200">
       <div className="h-10 flex items-center justify-center w-full border-b border-blue-400 pb-4">
         <img src={bantayGrad} alt="bantay logo" className="w-16" />
       </div>
@@ -443,6 +444,9 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         isVisible={showWeatherAlerts}
         onClose={closeWeatherAlerts}
       />
+
+      <SidebarAreaStatus></SidebarAreaStatus>
+
       <SidebarNearbySupport currentLocation={currentLocation} />
     </div>
   );
