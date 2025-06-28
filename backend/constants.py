@@ -231,7 +231,9 @@ WATER_LEVEL_SENSORS_LOC_DICT = {
           "L": (14.679517221060765, 121.10972533463467 - MARGIN_VALUE),
           "LT": (14.679517221060765 + MARGIN_VALUE, 121.10972533463467 - MARGIN_VALUE),
         },
-            
+        "alert": 16.0,
+        "alarm": 17.0,
+        "critical": 18.0
     },
     "Sto Nino": {
         "sensor_code": 11104201,

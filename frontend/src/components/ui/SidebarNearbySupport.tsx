@@ -1,63 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import locationData from '../config/locations.json';
+import React from 'react';
+import { useFacilitySearch } from '../../hooks/useFacilitySearch';
+import { Loader2 } from 'lucide-react';
 
-// Define the types
-interface LocationItem {
-    id: string;
-    title: string;
-    distance: string;
-    category: LocationCategory;
-    tag: string;
+interface SidebarNearbySupportProps {
+    currentLocation: {
+        latitude: number;
+        longitude: number;
+    } | null;
 }
 
-type LocationCategory = 'rescuer' | 'evacuation' | 'school' | 'medical' | 'government' | 'emergency';
+const SidebarNearbySupport: React.FC<SidebarNearbySupportProps> = ({ currentLocation }) => {
+    const { facilities, isLoading, error, searchFacilities } = useFacilitySearch();
 
+    React.useEffect(() => {
+        if (currentLocation) {
+            searchFacilities(currentLocation.latitude, currentLocation.longitude);
+        }
+    }, [currentLocation]);
 
-
-const SidebarNearbySupport: React.FC = () => {
-    const [locations, setLocations] = useState<LocationItem[]>([]);
-    const [categoryConfig, setCategoryConfig] = useState<Record<LocationCategory, { color: string; bgColor: string }>>({} as Record<LocationCategory, { color: string; bgColor: string }>);
-
-    useEffect(() => {
-        // Load data from JSON file with type assertion
-        setLocations(locationData.locations as LocationItem[]);
-        setCategoryConfig(locationData.categoryConfig as Record<LocationCategory, { color: string; bgColor: string }>);
-    }, []);
+    if (error) {
+        return (
+            <div className="p-4 text-center text-red-600">
+                <p>Error loading facilities: {error}</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-full ">
+        <div className="max-w-full">
             <h1 className="text-xl text-center font-bold text-[#066AAA] mb-6">Nearby Support Facilities</h1>
 
-            {/* Location list */}
-            <div className="space-y-3">
-                {locations.map((location) => {
-                    const config = categoryConfig[location.category];
-                    if (!config) return null;
-
-                    return (
+            {isLoading ? (
+                <div className="flex items-center justify-center p-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                </div>
+            ) : !currentLocation ? (
+                <div className="text-center text-gray-500 p-4">
+                    Please enter a location to see nearby facilities
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {facilities.map((facility) => (
                         <div
-                            key={location.id}
-                            className={`${config.bgColor} rounded-lg border-l-8 ${config.color} p-4 shadow-sm hover:shadow-md transition-shadow`}
+                            key={facility.id}
+                            className={`${facility.bgColor} rounded-lg border-l-8 ${facility.color} p-4 shadow-sm hover:shadow-md transition-shadow`}
                         >
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
                                     <h3 className="font-semibold text-gray-800 text-sm mb-1">
-                                        {location.title}
+                                        {facility.title}
                                     </h3>
                                     <p className="text-gray-600 text-sm">
-                                        {location.distance}
+                                        {facility.distance_text}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                  <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">
-                    {location.tag}
-                  </span>
+                                    <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">
+                                        {facility.tag}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    );
-                })}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
