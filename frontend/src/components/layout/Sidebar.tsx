@@ -32,20 +32,20 @@ const Sidebar = ({
                      show3DBuildings,
                      showPixelatedOverlay
                  }: Props) => {
-    const [location, setLocation] = useState('Caniogan, Pasig City');
+    const [location, setLocation] = useState('');
     const [mapControlsExpanded, setMapControlsExpanded] = useState(false);
 
-    const handleEmergencyCall = () => {
-        window.open('tel:911', '_self');
-    };
-
-    const handleEvacuation = () => {
-        console.log('Showing evacuation routes...');
-    };
-
-    const handleWeather = () => {
-        console.log('Showing weather information...');
-    };
+    // const handleEmergencyCall = () => {
+    //     window.open('tel:911', '_self');
+    // };
+    //
+    // const handleEvacuation = () => {
+    //     console.log('Showing evacuation routes...');
+    // };
+    //
+    // const handleWeather = () => {
+    //     console.log('Showing weather information...');
+    // };
 
     const handleLocationSearch = () => {
         console.log('Searching for location:', location);
@@ -86,9 +86,9 @@ const Sidebar = ({
             <SidebarHeader
                 location={location}
                 setLocation={setLocation}
-                handleEmergencyCall={handleEmergencyCall}
-                handleEvacuation={handleEvacuation}
-                handleWeather={handleWeather}
+                // handleEmergencyCall={handleEmergencyCall}
+                // handleEvacuation={handleEvacuation}
+                // handleWeather={handleWeather}
                 handleLocationSearch={handleLocationSearch}
                 bantayGrad={bantayGrad}
                 locIcon={locIcon}
