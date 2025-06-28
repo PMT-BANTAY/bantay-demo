@@ -255,8 +255,37 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     handleLocationSearch();
   };
 
-  const handleOriginalSearch = (): void => {
+  const handleOriginalSearch = async (): Promise<void> => {
     setShowSuggestions(false);
+
+    // If there's text in the input but no coordinates, geocode it first
+    if (location.trim() && !currentLocation) {
+      try {
+        const response = await fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${MAPBOX_ACCESS_TOKEN}&country=PH&proximity=121.0437,14.6760&types=place,locality,neighborhood,address,poi&limit=1&language=en`
+        );
+
+        if (response.ok) {
+          const data: MapboxResponse = await response.json();
+
+          if (data.features && data.features.length > 0) {
+            const feature = data.features[0];
+
+            // Update current location with coordinates
+            setCurrentLocation({
+              latitude: feature.center[1],
+              longitude: feature.center[0]
+            });
+
+            // Update location with the full place name
+            setLocation(feature.place_name);
+          }
+        }
+      } catch (error) {
+        console.error('Error geocoding location:', error);
+      }
+    }
+
     handleLocationSearch();
   };
 
@@ -273,22 +302,54 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           <div className="relative flex items-center bg-slate-100 border border-slate-300 rounded-lg p-3">
             <img src={locIcon} alt="location" className="pr-2" />
             <input
-              type="text"
-              className="flex-1 bg-transparent border-none text-sm text-slate-600 outline-none placeholder-slate-400"
-              value={location}
-              onChange={handleSearchInput}
-              placeholder="Enter location"
-              onFocus={() => {
-                if (suggestions.length > 0) {
-                  setShowSuggestions(true);
-                }
-              }}
+                type="text"
+                className="flex-1 bg-transparent border-none text-sm text-slate-600 outline-none placeholder-slate-400"
+                value={location}
+                onChange={handleSearchInput}
+                placeholder="Enter location"
+                onFocus={() => {
+                  if (suggestions.length > 0) {
+                    setShowSuggestions(true);
+                  }
+                }}
+                onBlur={() => {
+                  // Add a small delay to allow for suggestion clicks
+                  setTimeout(() => setShowSuggestions(false), 150);
+                }}
+                onKeyDown={async (e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Clear any pending search timeout
+                    if (searchTimeoutRef.current) {
+                      clearTimeout(searchTimeoutRef.current);
+                    }
+
+                    // If there are suggestions visible, use the first one
+                    if (showSuggestions && suggestions.length > 0) {
+                      handleSuggestionClick(suggestions[0]);
+                    } else {
+                      // Otherwise, geocode the current input
+                      await handleOriginalSearch();
+                    }
+
+                    setShowSuggestions(false);
+                    setSuggestions([]);
+                    (e.target as HTMLInputElement).blur();
+                  }
+
+                  if (e.key === 'Escape') {
+                    setShowSuggestions(false);
+                    setSuggestions([]);
+                  }
+                }}
             />
-            <img 
-              src={search} 
-              alt="search" 
-              className="pr-2 cursor-pointer" 
-              onClick={handleOriginalSearch} 
+            <img
+                src={search}
+                alt="search"
+                className="pr-2 cursor-pointer"
+                onClick={handleOriginalSearch}
             />
           </div>
 
