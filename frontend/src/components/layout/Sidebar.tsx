@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { SidebarHeader } from '../ui/SidebarHeader';
+import type { Map as MapboxMap } from 'mapbox-gl';
 import bantayGrad from '../../assets/bantay-grad.svg';
 import locIcon from '../../assets/loc-icon.svg';
 import search from '../../assets/search-blue.svg';
-import { SidebarHeader } from '../ui/SidebarHeader';
 import { SidebarContent } from '../ui/SidebarContent';
 
-type Props = {
+interface Props {
     currentCoords: {
         lng: number;
         lat: number;
@@ -19,19 +20,21 @@ type Props = {
     showWaterAreas: boolean;
     show3DBuildings: boolean;
     showPixelatedOverlay: boolean;
-};
+    map: MapboxMap | null;
+}
 
-const Sidebar = ({
-                     currentCoords,
-                     resetView,
-                     toggle3D,
-                     toggleWaterAreas,
-                     toggle3DBuildings,
-                     togglePixelatedOverlay,
-                     showWaterAreas,
-                     show3DBuildings,
-                     showPixelatedOverlay
-                 }: Props) => {
+const Sidebar: React.FC<Props> = ({
+    currentCoords,
+    resetView,
+    toggle3D,
+    toggleWaterAreas,
+    toggle3DBuildings,
+    togglePixelatedOverlay,
+    showWaterAreas,
+    show3DBuildings,
+    showPixelatedOverlay,
+    map
+}) => {
     const [location, setLocation] = useState('');
     const [mapControlsExpanded, setMapControlsExpanded] = useState(false);
 
@@ -55,32 +58,13 @@ const Sidebar = ({
         setMapControlsExpanded(!mapControlsExpanded);
     };
 
-    // Custom scrollbar styles
-    const scrollbarStyles = {
-        '::-webkit-scrollbar': {
-            width: '6px',
-        },
-        '::-webkit-scrollbar-track': {
-            background: '#f1f5f9',
-        },
-        '::-webkit-scrollbar-thumb': {
-            background: '#cbd5e1',
-            borderRadius: '3px',
-        },
-        '::-webkit-scrollbar-thumb:hover': {
-            background: '#94a3b8',
-        },
-        // Firefox scrollbar styling
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#cbd5e1 #f1f5f9',
-    };
-
     return (
         <div
-            className="fixed top-0 left-0 w-[60vh] h-screen bg-slate-50 text-slate-800 shadow-[2px_0_10px_rgba(0,0,0,0.1)] z-[1000] overflow-y-auto border-r border-slate-200"
+            className="absolute top-0 left-0 h-full w-[400px] bg-white shadow-lg z-10 overflow-y-auto"
             style={{
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                ...scrollbarStyles
+                scrollbarWidth: 'thin' as const,
+                scrollbarColor: '#CBD5E1 #F1F5F9',
+                msOverflowStyle: 'auto'
             }}
         >
             <SidebarHeader
@@ -93,6 +77,7 @@ const Sidebar = ({
                 bantayGrad={bantayGrad}
                 locIcon={locIcon}
                 search={search}
+                map={map}
             />
             <SidebarContent
                 currentCoords={currentCoords}

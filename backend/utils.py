@@ -14,25 +14,25 @@ SIMULATION_MODE = True  # Set to True for demonstration purposes
 SIMULATION_SCENARIOS = {
     'light_flooding': {
         'description': 'Light flooding scenario',
-        'base_multiplier': 1.1,  # 10% above normal
+        'base_multiplier': 0.4,  # 40% of threshold
         'max_propagation_distance': 5,  # Increased from 3
         'tile_reduction_factor': 0.95
     },
     'moderate_flooding': {
         'description': 'Moderate flooding scenario', 
-        'base_multiplier': 1.3,  # 30% above normal
+        'base_multiplier': 0.6,  # 60% of threshold
         'max_propagation_distance': 7,  # Increased from 4
         'tile_reduction_factor': 0.90
     },
     'severe_flooding': {
         'description': 'Severe flooding scenario',
-        'base_multiplier': 1.6,  # 60% above normal
+        'base_multiplier': 0.8,  # 80% of threshold
         'max_propagation_distance': 9,  # Increased from 5
         'tile_reduction_factor': 0.85
     },
     'critical_flooding': {
         'description': 'Critical flooding scenario',
-        'base_multiplier': 2.0,  # 100% above normal (double the critical threshold)
+        'base_multiplier': 1.0,  # 100% of threshold
         'max_propagation_distance': 12,  # Increased from 6
         'tile_reduction_factor': 0.80
     }

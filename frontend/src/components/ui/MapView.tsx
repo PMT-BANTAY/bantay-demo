@@ -5,6 +5,11 @@ import '../../styles/MapView.css'
 
 import Legend from '../layout/Legend.tsx'
 import Sidebar from '../layout/Sidebar.tsx'
+import { useSensor } from '../../context/SensorContext'
+import { useEvacuation } from '../../context/EvacuationContext'
+import { EmergencyContacts } from '../ui/EmergencyContact'
+import { EvacuationRoutes } from '../ui/EvacuationRoute'
+import { WeatherAlerts } from '../ui/WeatherAlert'
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || import.meta.env.VITE_MAPBOX_API
 
@@ -112,6 +117,19 @@ const createFloodTilesGeoJSON = (sensorsData: Sensor[]): GeoJSON.FeatureCollecti
     }
 }
 
+// Define a type for GeoJSON with nullable geometry
+type NullableGeometryFeature = {
+    type: 'Feature';
+    properties: {};
+    geometry: GeoJSON.Geometry | null;
+};
+
+// Empty geometry for when no route is selected
+const emptyLineString: GeoJSON.LineString = {
+    type: 'LineString',
+    coordinates: []
+};
+
 function MapView() {
     const mapRef = useRef<Map | null>(null)
     const mapContainerRef = useRef<HTMLDivElement | null>(null)
@@ -128,6 +146,16 @@ function MapView() {
         lat: 14.651489,
         zoom: 11
     })
+    const { setSelectedSensor } = useSensor()
+    const [defaultSensor, setDefaultSensor] = useState<Sensor | null>(null)
+    const { routeGeometry } = useEvacuation()
+    const [showEmergencyContacts, setShowEmergencyContacts] = useState(false)
+    const [showEvacuationRoutes, setShowEvacuationRoutes] = useState(false)
+    const [currentLocation, setCurrentLocation] = useState<{
+        latitude: number;
+        longitude: number;
+    } | null>(null)
+    const [showWeatherAlerts, setShowWeatherAlerts] = useState(false)
 
     // WebSocket connection management
     const connectWebSocket = () => {
@@ -289,6 +317,15 @@ function MapView() {
 
     const connectionDisplay = getConnectionDisplay()
 
+    // Set default sensor when data is loaded
+    useEffect(() => {
+        if (sensorsData.length > 0 && !defaultSensor) {
+            const firstSensor = sensorsData[0];
+            setDefaultSensor(firstSensor);
+            setSelectedSensor(firstSensor);
+        }
+    }, [sensorsData, defaultSensor]);
+
     useEffect(() => {
         if (!mapContainerRef.current || connectionState === 'connecting') return
 
@@ -374,10 +411,15 @@ function MapView() {
           z-index: 1000;
         `
 
-                new mapboxgl.Marker({ element: markerElement })
+                const marker = new mapboxgl.Marker({ element: markerElement })
                     .setLngLat([lng, lat])
                     .setPopup(new mapboxgl.Popup().setHTML(popupContent))
                     .addTo(map)
+
+                // Add click handler to update selected sensor
+                markerElement.addEventListener('click', () => {
+                    setSelectedSensor(sensor)
+                })
             })
 
             // Create flood tiles visualization using detailed sensor data
@@ -534,12 +576,103 @@ function MapView() {
                     'line-opacity': 0.7
                 }
             })
+
+            // Add source and layer for evacuation route
+            map.addSource('route', {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: emptyLineString
+                }
+            });
+
+            map.addLayer({
+                id: 'route-line',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#066AAA',
+                    'line-width': 4,
+                    'line-opacity': 0.8
+                }
+            });
+
+            // Add layer for route casing (outline)
+            map.addLayer({
+                id: 'route-casing',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#fff',
+                    'line-width': 6,
+                    'line-opacity': 0.5
+                }
+            }, 'route-line'); // Add this layer below the main route line
+
+            // Add layer for route animation
+            map.addLayer({
+                id: 'route-animation',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#066AAA',
+                    'line-width': 4,
+                    'line-opacity': [
+                        'interpolate',
+                        ['linear'],
+                        ['line-progress'],
+                        0, 0,
+                        0.1, 0.8,
+                        1, 0
+                    ]
+                }
+            });
         })
 
         return () => {
             map.remove()
         }
-    }, [sensorsData, connectionState]) // Re-run when sensor data changes
+    }, [sensorsData, connectionState, setSelectedSensor])
+
+    // Update route on the map when routeGeometry changes
+    useEffect(() => {
+        if (!mapRef.current) return;
+
+        const map = mapRef.current;
+
+        // Update the route source with new geometry
+        (map.getSource('route') as mapboxgl.GeoJSONSource).setData({
+            type: 'Feature',
+            properties: {},
+            geometry: routeGeometry || emptyLineString
+        });
+
+        // If we have a route, fit the map to its bounds
+        if (routeGeometry && routeGeometry.coordinates.length > 0) {
+            const coordinates = routeGeometry.coordinates;
+            const bounds = coordinates.reduce((bounds: mapboxgl.LngLatBounds, coord: number[]) => {
+                return bounds.extend(coord as [number, number]);
+            }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+            map.fitBounds(bounds, {
+                padding: 100,
+                duration: 1000
+            });
+        }
+    }, [routeGeometry]);
 
     const toggleLayer = (id: string, visible: boolean) => {
         if (mapRef.current) {
@@ -548,6 +681,21 @@ function MapView() {
             mapRef.current.setLayoutProperty(id, 'visibility', visibility)
         }
     }
+
+    // Update currentLocation when coordinates change
+    const updateCurrentLocation = (coords: [number, number]) => {
+        setCurrentLocation({
+            latitude: coords[1],
+            longitude: coords[0]
+        });
+    };
+
+    // Use updateCurrentLocation in your existing code where you set coordinates
+    // For example, in your geolocation handler:
+    const handleGeolocation = (position: GeolocationPosition) => {
+        const { latitude, longitude } = position.coords;
+        updateCurrentLocation([longitude, latitude]);
+    };
 
     // Show loading state
     if (connectionState === 'connecting') {
@@ -655,11 +803,27 @@ function MapView() {
                 showWaterAreas={showWaterAreas}
                 show3DBuildings={show3DBuildings}
                 showPixelatedOverlay={showPixelatedOverlay}
+                map={mapRef.current}
             />
 
             <Legend />
             <div id="map-container" ref={mapContainerRef} />
             
+            <EmergencyContacts
+                isVisible={showEmergencyContacts}
+                onClose={() => setShowEmergencyContacts(false)}
+            />
+            <EvacuationRoutes
+                isVisible={showEvacuationRoutes}
+                onClose={() => setShowEvacuationRoutes(false)}
+                currentLocation={currentLocation}
+                map={mapRef.current}
+            />
+            <WeatherAlerts
+                isVisible={showWeatherAlerts}
+                onClose={() => setShowWeatherAlerts(false)}
+            />
+
             {/* Connection status indicator */}
             <div 
                 style={{

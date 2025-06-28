@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
-import { useEvacuationRoutes, EvacuationRoute } from '../../hooks/useEvacuationRoutes';
-import { Loader2 } from 'lucide-react';
+import { useEvacuationRoutes } from '../../hooks/useEvacuationRoutes';
+import { useEvacuation } from '../../context/EvacuationContext';
+import { Loader2, MapPin, Clock, ArrowRight } from 'lucide-react';
+import type { Map as MapboxMap } from 'mapbox-gl';
 
 interface EvacuationRoutesProps {
     isVisible: boolean;
@@ -9,22 +11,43 @@ interface EvacuationRoutesProps {
         latitude: number;
         longitude: number;
     } | null;
+    map: MapboxMap | null;
 }
 
-export const EvacuationRoutes: React.FC<EvacuationRoutesProps> = ({ isVisible, onClose, currentLocation }) => {
-    const { routes, isLoading, error, fetchEvacuationRoutes } = useEvacuationRoutes();
+export const EvacuationRoutes: React.FC<EvacuationRoutesProps> = ({ isVisible, onClose, currentLocation, map }) => {
+    const { routes, isLoading, error, fetchEvacuationRoutes, getRouteDirections } = useEvacuationRoutes();
+    const { selectedRoute, setSelectedRoute, setRouteGeometry } = useEvacuation();
 
     useEffect(() => {
-        if (isVisible && currentLocation) {
-            fetchEvacuationRoutes(currentLocation.latitude, currentLocation.longitude);
+        if (isVisible && currentLocation && map) {
+            fetchEvacuationRoutes(currentLocation.latitude, currentLocation.longitude, map);
         }
-    }, [isVisible, currentLocation]);
+    }, [isVisible, currentLocation, map]);
+
+    const handleRouteSelect = async (route: typeof routes[0]) => {
+        if (!map) return;
+
+        try {
+            // If clicking the same route, deselect it
+            if (selectedRoute?.id === route.id) {
+                setSelectedRoute(null);
+                setRouteGeometry(null);
+                return;
+            }
+
+            setSelectedRoute(route);
+            const geometry = await getRouteDirections(route, map);
+            setRouteGeometry(geometry);
+        } catch (error) {
+            console.error('Error selecting route:', error);
+        }
+    };
 
     if (!isVisible) return null;
 
     return (
         <div className="mt-4 bg-white rounded-lg shadow-lg border-l-8 border-l-[#066AAA] overflow-hidden">
-            <div className="px-4 flex items-center justify-between">
+            <div className="px-4 py-3 flex items-center justify-between border-b border-gray-100">
                 <div className="flex items-center text-slate-700">
                     <h3 className="text-lg font-semibold">Evacuation Routes</h3>
                 </div>
@@ -53,21 +76,38 @@ export const EvacuationRoutes: React.FC<EvacuationRoutesProps> = ({ isVisible, o
                     </div>
                 ) : (
                     <div className="space-y-3">
-                        {routes.map((route, index) => (
-                            <div key={index} className="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-800">{route.name}</h4>
-                                        <p className="text-sm text-gray-600 mt-1">{route.destination}</p>
+                        {routes.map((route) => (
+                            <button
+                                key={route.id}
+                                onClick={() => handleRouteSelect(route)}
+                                className={`w-full text-left p-4 rounded-lg transition-all duration-200 ${
+                                    selectedRoute?.id === route.id
+                                        ? 'bg-blue-100 border-2 border-blue-500'
+                                        : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                                }`}
+                            >
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <div className="flex items-center space-x-2">
+                                            <MapPin className="h-4 w-4 text-blue-600" />
+                                            <h4 className="font-semibold text-gray-800">{route.name}</h4>
+                                        </div>
+                                        <p className="text-sm text-gray-600 mt-1 ml-6">{route.destination}</p>
+                                        <div className="flex items-center space-x-4 mt-2 ml-6">
+                                            <div className="flex items-center text-gray-500">
+                                                <Clock className="h-4 w-4 mr-1" />
+                                                <span className="text-sm">{route.walkTime}</span>
+                                            </div>
+                                            <div className="text-sm text-gray-500">
+                                                {route.distance}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-gray-500">
-                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span className="text-sm">{route.walkTime}</span>
-                                    </div>
+                                    <ArrowRight className={`h-5 w-5 transform transition-transform ${
+                                        selectedRoute?.id === route.id ? 'rotate-90 text-blue-600' : 'text-gray-400'
+                                    }`} />
                                 </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
                 )}

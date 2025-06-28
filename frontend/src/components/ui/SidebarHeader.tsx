@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
+import type { Map as MapboxMap } from 'mapbox-gl';
 import emergencyIcon from '../../assets/emergency.svg';
 import weatherIcon from '../../assets/weather.svg';
 import evacuation from '../../assets/evac.svg';
@@ -31,6 +32,7 @@ type SidebarHeaderProps = {
   bantayGrad: string;
   locIcon: string;
   search: string;
+  map: MapboxMap | null;
 };
 
 export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
@@ -39,7 +41,8 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   handleLocationSearch,
   bantayGrad,
   locIcon,
-  search
+  search,
+  map
 }) => {
   // Location search state
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -118,13 +121,11 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   };
 
   const getCurrentLocation = async (): Promise<void> => {
-    // Check if geolocation is supported
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by this browser. Please enter your location manually.');
       return;
     }
 
-    // Check if we're on HTTPS (required for geolocation in most browsers)
     if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost') {
       alert('Location services require a secure connection (HTTPS). Please enter your location manually.');
       return;
@@ -132,11 +133,10 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
 
     setIsGettingLocation(true);
 
-    // Enhanced geolocation options
     const geoOptions: PositionOptions = {
       enableHighAccuracy: true,
-      timeout: 15000, // 15 seconds timeout
-      maximumAge: 300000, // 5 minutes cache
+      timeout: 15000,
+      maximumAge: 300000,
     };
 
     navigator.geolocation.getCurrentPosition(
@@ -146,7 +146,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           
           console.log('Got coordinates:', latitude, longitude);
           
-          // Update current location for nearby facilities
+          // Update current location for evacuation routes and nearby facilities
           setCurrentLocation({
             latitude,
             longitude
@@ -174,8 +174,6 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           }
           
           setShowSuggestions(false);
-          
-          // Call the original handleLocationSearch to update the map
           handleLocationSearch();
           
         } catch (error) {
@@ -183,6 +181,13 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           const { latitude, longitude } = position.coords;
           const fallbackLocation = `Current Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
           setLocation(fallbackLocation);
+          
+          // Still update current location even if reverse geocoding fails
+          setCurrentLocation({
+            latitude,
+            longitude
+          });
+          
           handleLocationSearch();
         }
       },
@@ -190,23 +195,17 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         console.error('Geolocation error:', error);
         const errorMessage = getLocationErrorMessage(error);
         
-        // Additional debugging info
-        console.log('Error details:', {
-          code: error.code,
-          message: error.message,
-          isHttps: window.location.protocol === 'https:',
-          hostname: window.location.hostname,
-          userAgent: navigator.userAgent
-        });
-
-        // For development: offer to use a default location
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
           const useDefault = confirm(
-            `${errorMessage}\n\nWould you like to use a default location (Quezon City) for testing?`
+            `${errorMessage}\n\nWould you like to use a default location (Marikina City) for testing?`
           );
           
           if (useDefault) {
-            setLocation('Quezon City, Metro Manila, Philippines');
+            setLocation('Marikina City, Metro Manila, Philippines');
+            setCurrentLocation({
+              latitude: 14.6507,
+              longitude: 121.1029
+            });
             handleLocationSearch();
             setIsGettingLocation(false);
             return;
@@ -219,10 +218,9 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       geoOptions
     );
     
-    // Reset loading state after timeout
     setTimeout(() => {
       setIsGettingLocation(false);
-    }, 16000); // Slightly longer than timeout
+    }, 16000);
   };
   
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -245,7 +243,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     console.log('Selected coordinates:', suggestion.center);
     console.log('Selected place:', suggestion);
     
-    // Update current location for nearby facilities
+    // Update current location for evacuation routes and nearby facilities
     setCurrentLocation({
       latitude: suggestion.center[1],
       longitude: suggestion.center[0]
@@ -259,10 +257,10 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     setShowSuggestions(false);
 
     // If there's text in the input but no coordinates, geocode it first
-    if (location.trim() && !currentLocation) {
+    if (location.trim()) {
       try {
         const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${MAPBOX_ACCESS_TOKEN}&country=PH&proximity=121.0437,14.6760&types=place,locality,neighborhood,address,poi&limit=1&language=en`
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${MAPBOX_ACCESS_TOKEN}&country=PH&proximity=121.0437,14.6760&types=place,locality,neighborhood,address,poi&limit=1&language=en`
         );
 
         if (response.ok) {
@@ -500,6 +498,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
         isVisible={showEvacuationRoutes}
         onClose={closeEvacuationRoutes}
         currentLocation={currentLocation}
+        map={map}
       />
       <WeatherAlerts
         isVisible={showWeatherAlerts}
