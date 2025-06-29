@@ -8,9 +8,9 @@ interface Node {
 
 interface Connection {
     nodeId: string;
-    weight: number;  // Distance in meters
+    weight: number;
     roadType: string;
-    floodRisk: number; // 0-1, where 1 is highest risk
+    floodRisk: number;
 }
 
 interface RoadNetwork {
@@ -25,35 +25,119 @@ interface RouteOptions {
 export class RouteCalculator {
     private roadNetwork: RoadNetwork;
     private map: mapboxgl.Map;
+    private networkLoaded: boolean = false;
+    private loadingPromise: Promise<void> | null = null;
+    private loadedBounds: mapboxgl.LngLatBounds | null = null;
 
     constructor(map: mapboxgl.Map) {
         this.map = map;
         this.roadNetwork = { nodes: {} };
     }
 
-    // Load road network data from Mapbox within a bounding box
     async loadRoadNetwork(bounds: mapboxgl.LngLatBounds): Promise<void> {
+        // If already loading, wait for existing load to complete
+        if (this.loadingPromise) {
+            await this.loadingPromise;
+        }
+
+        // Check if we already have data for these bounds
+        if (this.networkLoaded && this.loadedBounds && this.boundsContain(this.loadedBounds, bounds)) {
+            console.log('Road network already loaded for these bounds');
+            return;
+        }
+
+        // Start loading
+        this.loadingPromise = this.performLoadRoadNetwork(bounds);
+        await this.loadingPromise;
+        this.loadingPromise = null;
+    }
+
+    private boundsContain(loadedBounds: mapboxgl.LngLatBounds, requestedBounds: mapboxgl.LngLatBounds): boolean {
+        return loadedBounds.getWest() <= requestedBounds.getWest() &&
+               loadedBounds.getEast() >= requestedBounds.getEast() &&
+               loadedBounds.getSouth() <= requestedBounds.getSouth() &&
+               loadedBounds.getNorth() >= requestedBounds.getNorth();
+    }
+
+    private async performLoadRoadNetwork(bounds: mapboxgl.LngLatBounds): Promise<void> {
         try {
-            // Query road features from Mapbox using queryRenderedFeatures
-            const roadFeatures = this.map.queryRenderedFeatures(
-                [
-                    this.map.project(bounds.getSouthWest()),
-                    this.map.project(bounds.getNorthEast())
-                ],
-                {
-                    layers: ['road-primary', 'road-secondary', 'road-street']
+            console.log('Loading road network for bounds:', bounds.toArray());
+            
+            // Wait for style to be loaded
+            if (!this.map.isStyleLoaded()) {
+                await new Promise(resolve => this.map.once('idle', resolve));
+            }
+
+            // Reset network for new bounds
+            this.roadNetwork = { nodes: {} };
+            this.networkLoaded = false;
+
+            // Get all available layers
+            const availableLayers = this.map.getStyle().layers.map(layer => layer.id);
+            
+            // Priority order: try most specific road layers first
+            const roadLayerPriority = [
+                'road-simple', // Main layer found in light-v11
+                'roads-overlay', // Secondary layer found in light-v11
+                'road-motorway-trunk',
+                'road-primary',
+                'road-secondary-tertiary',
+                'road-minor',
+                'road-street',
+                'road-pedestrian',
+                'road-path'
+            ];
+
+            // Find available road layers in priority order
+            const foundLayers = roadLayerPriority.filter(layer => availableLayers.includes(layer));
+            
+            // If no priority layers found, try pattern matching
+            if (foundLayers.length === 0) {
+                const patternLayers = availableLayers.filter(layer => 
+                    layer.toLowerCase().includes('road') &&
+                    !layer.toLowerCase().includes('label') // Exclude text labels
+                );
+                foundLayers.push(...patternLayers);
+            }
+
+            console.log('Available road layers:', foundLayers);
+
+            let allRoadFeatures: mapboxgl.MapboxGeoJSONFeature[] = [];
+
+            // Query each found layer
+            for (const layerId of foundLayers) {
+                try {
+                    const features = this.map.queryRenderedFeatures(
+                        [
+                            this.map.project(bounds.getSouthWest()),
+                            this.map.project(bounds.getNorthEast())
+                        ],
+                        { layers: [layerId] }
+                    );
+                    
+                    if (features.length > 0) {
+                        allRoadFeatures = allRoadFeatures.concat(features);
+                        console.log(`Found ${features.length} features in layer ${layerId}`);
+                    }
+                } catch (error) {
+                    console.warn(`Could not query layer ${layerId}:`, error);
                 }
-            );
+            }
 
-            // Process road features into our graph structure
-            roadFeatures.forEach(feature => {
-                if (feature.geometry.type === 'LineString') {
+            console.log(`Total road features found: ${allRoadFeatures.length}`);
+
+            // Process the features to build road network
+            allRoadFeatures.forEach((feature) => {
+                if (feature.geometry?.type === 'LineString') {
                     const coordinates = feature.geometry.coordinates;
-                    const roadType = feature.properties?.class || 'street';
+                    const roadType = feature.properties?.class || 
+                                   feature.properties?.type || 
+                                   feature.layer?.id || 
+                                   'street';
 
-                    // Create nodes for each coordinate point
                     coordinates.forEach((coord, idx) => {
-                        const nodeId = `node-${coord[0]}-${coord[1]}`;
+                        // Use more precision for node IDs to avoid duplicates
+                        const nodeId = `node-${coord[0].toFixed(6)}-${coord[1].toFixed(6)}`;
                         
                         if (!this.roadNetwork.nodes[nodeId]) {
                             this.roadNetwork.nodes[nodeId] = {
@@ -63,16 +147,13 @@ export class RouteCalculator {
                             };
                         }
 
-                        // Connect to next node if it exists
                         if (idx < coordinates.length - 1) {
                             const nextCoord = coordinates[idx + 1];
-                            const nextNodeId = `node-${nextCoord[0]}-${nextCoord[1]}`;
+                            const nextNodeId = `node-${nextCoord[0].toFixed(6)}-${nextCoord[1].toFixed(6)}`;
                             const distance = this.calculateDistance(coord, nextCoord);
                             
-                            // Get flood risk from map data layer if available
                             const floodRisk = this.getFloodRisk(coord);
 
-                            // Add bidirectional connections
                             this.roadNetwork.nodes[nodeId].connections.push({
                                 nodeId: nextNodeId,
                                 weight: distance,
@@ -80,7 +161,6 @@ export class RouteCalculator {
                                 floodRisk
                             });
 
-                            // Create the next node if it doesn't exist
                             if (!this.roadNetwork.nodes[nextNodeId]) {
                                 this.roadNetwork.nodes[nextNodeId] = {
                                     id: nextNodeId,
@@ -97,13 +177,30 @@ export class RouteCalculator {
                     });
                 }
             });
+
+            const nodeCount = Object.keys(this.roadNetwork.nodes).length;
+            console.log(`Road network loaded: ${nodeCount} nodes from ${allRoadFeatures.length} features`);
+            
+            if (nodeCount === 0) {
+                console.warn('No road network nodes created. Available layers:', availableLayers);
+                throw new Error('Failed to load road network: No nodes created');
+            }
+
+            this.networkLoaded = true;
+            this.loadedBounds = bounds;
+            
         } catch (error) {
             console.error('Error loading road network:', error);
+            this.networkLoaded = false;
+            this.loadedBounds = null;
             throw error;
         }
     }
 
-    // Calculate distance between two points in meters
+    isNetworkLoaded(): boolean {
+        return this.networkLoaded && Object.keys(this.roadNetwork.nodes).length > 0;
+    }
+
     private calculateDistance(coord1: number[], coord2: number[]): number {
         const R = 6371e3; // Earth's radius in meters
         const φ1 = (coord1[1] * Math.PI) / 180;
@@ -119,7 +216,6 @@ export class RouteCalculator {
         return R * c;
     }
 
-    // Get flood risk for a coordinate from map data
     private getFloodRisk(coord: number[]): number {
         try {
             const floodData = this.map.queryRenderedFeatures(
@@ -143,7 +239,6 @@ export class RouteCalculator {
         }
     }
 
-    // Find nearest node to a coordinate
     private findNearestNode(coord: [number, number]): string {
         let nearestNode = '';
         let minDistance = Infinity;
@@ -159,20 +254,41 @@ export class RouteCalculator {
         return nearestNode;
     }
 
-    // Dijkstra's algorithm implementation with custom weighting
     findRoute(
         start: [number, number],
         end: [number, number],
         options: RouteOptions = {}
     ): [number, number][] {
+        // Input validation
+        if (!start || !end) {
+            throw new Error('Start or end coordinates are undefined');
+        }
+
+        if (!Array.isArray(start) || start.length !== 2 || 
+            !Array.isArray(end) || end.length !== 2) {
+            throw new Error('Invalid coordinate format');
+        }
+
+        if (!this.isNetworkLoaded()) {
+            throw new Error('Road network is empty. Make sure loadRoadNetwork was called successfully.');
+        }
+
         const startNodeId = this.findNearestNode(start);
         const endNodeId = this.findNearestNode(end);
 
+        if (!startNodeId || !endNodeId) {
+            throw new Error('Could not find nearest nodes for start or end points');
+        }
+
+        if (!this.roadNetwork.nodes[startNodeId] || !this.roadNetwork.nodes[endNodeId]) {
+            throw new Error('Start or end node not found in road network');
+        }
+
+        // Dijkstra's algorithm
         const distances: { [key: string]: number } = {};
         const previous: { [key: string]: string } = {};
         const unvisited = new Set<string>();
 
-        // Initialize distances
         Object.keys(this.roadNetwork.nodes).forEach(nodeId => {
             distances[nodeId] = Infinity;
             unvisited.add(nodeId);
@@ -180,7 +296,7 @@ export class RouteCalculator {
         distances[startNodeId] = 0;
 
         while (unvisited.size > 0) {
-            // Find node with minimum distance
+            // Find unvisited node with minimum distance
             let current = '';
             let minDistance = Infinity;
             unvisited.forEach(nodeId => {
@@ -195,15 +311,17 @@ export class RouteCalculator {
 
             unvisited.delete(current);
 
-            // Update distances to neighbors
             const currentNode = this.roadNetwork.nodes[current];
+            if (!currentNode || !currentNode.connections) continue;
+
             currentNode.connections.forEach(connection => {
                 if (!unvisited.has(connection.nodeId)) return;
 
-                // Calculate weighted distance based on options
                 let weight = connection.weight;
+                
+                // Apply routing options
                 if (options.avoidFlooding) {
-                    weight *= (1 + connection.floodRisk * 2); // Heavily penalize flood risk
+                    weight *= (1 + connection.floodRisk * 2); 
                 }
                 if (options.preferMainRoads) {
                     weight *= connection.roadType === 'primary' ? 0.8 : 
@@ -222,29 +340,41 @@ export class RouteCalculator {
         const path: [number, number][] = [];
         let current = endNodeId;
         while (current && current !== startNodeId) {
-            path.unshift(this.roadNetwork.nodes[current].coordinates);
+            const node = this.roadNetwork.nodes[current];
+            if (!node || !node.coordinates) {
+                console.error(`Node ${current} has invalid coordinates`);
+                break;
+            }
+            path.unshift(node.coordinates);
             current = previous[current];
         }
+        
         if (current === startNodeId) {
-            path.unshift(this.roadNetwork.nodes[startNodeId].coordinates);
+            const startNode = this.roadNetwork.nodes[startNodeId];
+            if (startNode && startNode.coordinates) {
+                path.unshift(startNode.coordinates);
+            }
         }
 
         return path;
     }
 
-    // Main route finding function with fallback to Mapbox Directions API
     async calculateRoute(
         start: [number, number],
         end: [number, number],
         options: RouteOptions = {}
     ): Promise<GeoJSON.LineString> {
         try {
-            // Try Dijkstra first
+            if (!start || !end) {
+                throw new Error('Start or end coordinates are required');
+            }
+
+            // Create bounds around start and end points
             const bounds = new mapboxgl.LngLatBounds()
                 .extend(start)
                 .extend(end);
             
-            // Extend bounds to include potential routes
+            // Add padding to ensure we capture roads around the route
             bounds.extend([
                 bounds.getWest() - 0.01,
                 bounds.getSouth() - 0.01
@@ -253,7 +383,14 @@ export class RouteCalculator {
                 bounds.getNorth() + 0.01
             ]);
 
+            // Load road network if not already loaded for these bounds
             await this.loadRoadNetwork(bounds);
+            
+            // Verify network is loaded
+            if (!this.isNetworkLoaded()) {
+                throw new Error('Road network failed to load');
+            }
+
             const route = this.findRoute(start, end, options);
 
             if (route.length > 1) {
@@ -264,7 +401,7 @@ export class RouteCalculator {
             }
 
             // Fallback to Mapbox Directions API
-            console.log('Falling back to Mapbox Directions API');
+            console.log('No route found, falling back to Mapbox Directions API');
             return this.getMapboxDirections(start, end);
         } catch (error) {
             console.error('Error in route calculation:', error);
@@ -272,7 +409,6 @@ export class RouteCalculator {
         }
     }
 
-    // Mapbox Directions API fallback
     private async getMapboxDirections(
         start: [number, number],
         end: [number, number]
@@ -286,6 +422,11 @@ export class RouteCalculator {
         }
 
         const data = await response.json();
+        
+        if (!data.routes || data.routes.length === 0) {
+            throw new Error('No routes found from Mapbox Directions API');
+        }
+
         return data.routes[0].geometry;
     }
-} 
+}
