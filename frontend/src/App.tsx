@@ -1,6 +1,6 @@
 // frontend/src/App.tsx
 
-import React from 'react';
+import Maintenance from "./pages/Maintenance";
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavigationBar from "./components/layout/NavigationBar.tsx";
@@ -12,7 +12,7 @@ import MapView from "./components/ui/MapView.tsx";
 import { SensorProvider } from './context/SensorContext';
 import { EvacuationProvider } from './context/EvacuationContext';
 
-// Home component that contains your main landing page content
+// Home component or landing
 const LandingPage = () => {
     return (
         <>
@@ -24,8 +24,13 @@ const LandingPage = () => {
         </>
     );
 };
-
 function App() {
+    const isMaintenanceMode = true;
+
+    if (isMaintenanceMode) {
+        return <Maintenance />;
+    }
+
     return (
         <SensorProvider>
             <EvacuationProvider>
@@ -43,5 +48,6 @@ function App() {
         </SensorProvider>
     );
 }
+
 
 export default App;
