@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import mapboxgl, { Map } from 'mapbox-gl'
+import { ConnectionStatus } from '../ui/ConnectionStatus.tsx'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '../../styles/MapView.css'
 
@@ -74,7 +75,7 @@ const createFloodTilesGeoJSON = (sensorsData: Sensor[]): GeoJSON.FeatureCollecti
             if (tile.status === 'normal') return
 
             const [tileLat, tileLng] = tile.centroid
-            
+
             // Calculate tile boundaries
             const tileDegrees = metersToDegrees(TILE_SIZE_METERS, tileLat)
             const halfTileLat = tileDegrees.lat / 2
@@ -162,14 +163,14 @@ function MapView() {
         try {
             setConnectionState('connecting')
             setError(null)
-            
+
             const ws = new WebSocket(`${WS_BASE_URL}/ws/flood-mapping`)
-            
+
             ws.onopen = () => {
                 console.log('WebSocket connected for real-time flood mapping')
                 setConnectionState('connected')
                 setError(null)
-                
+
                 // Send ping every 30 seconds to keep connection alive
                 const pingInterval = setInterval(() => {
                     if (ws.readyState === WebSocket.OPEN) {
@@ -178,19 +179,19 @@ function MapView() {
                         clearInterval(pingInterval)
                     }
                 }, 30000)
-                
+
                 // Store interval ID to clear on close
                 ;(ws as any).pingInterval = pingInterval
             }
-            
+
             ws.onmessage = (event) => {
                 try {
                     const message: WebSocketMessage = JSON.parse(event.data)
-                    
+
                     if (message.type === 'initial_data' || message.type === 'flood_update') {
                         if (message.status === 'success' && message.data) {
                             console.log(`🔄 ${message.type === 'initial_data' ? 'Initial' : 'Updated'} flood data: ${message.total_sensors} sensors`)
-                            
+
                             setSensorsData(message.data)
                             setLastUpdateTime(message.timestamp)
                         }
@@ -202,16 +203,16 @@ function MapView() {
                     console.error('Error parsing WebSocket message:', err)
                 }
             }
-            
+
             ws.onclose = (event) => {
                 console.log('WebSocket connection closed:', event.code, event.reason)
                 setConnectionState('disconnected')
-                
+
                 // Clear ping interval
                 if ((ws as any).pingInterval) {
                     clearInterval((ws as any).pingInterval)
                 }
-                
+
                 // Attempt to reconnect after 3 seconds
                 setTimeout(() => {
                     if (!websocket || websocket.readyState === WebSocket.CLOSED) {
@@ -220,15 +221,15 @@ function MapView() {
                     }
                 }, 3000)
             }
-            
+
             ws.onerror = (error) => {
                 console.error('WebSocket error:', error)
                 setConnectionState('error')
                 setError('WebSocket connection failed. Attempting to reconnect...')
             }
-            
+
             setWebsocket(ws)
-            
+
         } catch (err) {
             console.error('Failed to create WebSocket connection:', err)
             setConnectionState('error')
@@ -243,9 +244,9 @@ function MapView() {
             if (!response.ok) {
                 throw new Error(`Failed to fetch flood mapping data: ${response.statusText}`)
             }
-            
+
             const data: FloodMappingResponse = await response.json()
-            
+
             if (data.status === 'success' && data.data) {
                 setSensorsData(data.data)
                 setLastUpdateTime(data.timestamp)
@@ -260,7 +261,7 @@ function MapView() {
     // Initialize WebSocket connection on component mount
     useEffect(() => {
         connectWebSocket()
-        
+
         // Cleanup on unmount
         return () => {
             if (websocket) {
@@ -277,46 +278,6 @@ function MapView() {
         setTimeout(connectWebSocket, 500)
     }
 
-    // Helper function to get connection status display info
-    const getConnectionDisplay = () => {
-        switch (connectionState) {
-            case 'connected':
-                return {
-                    emoji: '🟢',
-                    text: 'Live Stream',
-                    color: '#4caf50',
-                    borderColor: '#4caf50',
-                    subtext: 'Real-time updates every 30s'
-                }
-            case 'connecting':
-                return {
-                    emoji: '🟡',
-                    text: 'Connecting...',
-                    color: '#ff9800',
-                    borderColor: '#ff9800',
-                    subtext: 'Establishing connection...'
-                }
-            case 'error':
-                return {
-                    emoji: '🔴',
-                    text: 'Connection Error',
-                    color: '#f44336',
-                    borderColor: '#f44336',
-                    subtext: 'Click to reconnect'
-                }
-            case 'disconnected':
-                return {
-                    emoji: '⚪',
-                    text: 'Disconnected',
-                    color: '#9e9e9e',
-                    borderColor: '#9e9e9e',
-                    subtext: 'Click to reconnect'
-                }
-        }
-    }
-
-    const connectionDisplay = getConnectionDisplay()
-
     // Set default sensor when data is loaded
     useEffect(() => {
         if (sensorsData.length > 0 && !defaultSensor) {
@@ -325,6 +286,7 @@ function MapView() {
             setSelectedSensor(firstSensor);
         }
     }, [sensorsData, defaultSensor]);
+
 
     useEffect(() => {
         if (!mapContainerRef.current || connectionState === 'connecting') return
@@ -385,17 +347,17 @@ function MapView() {
 
                 // Simplified popup content - only essential sensor information
                 const popupContent = `
-          <div class="popup-content">
-            <h3 class="popup-title">${sensorName}</h3>
-            <p><strong>Coordinates:</strong> ${lat.toFixed(6)}, ${lng.toFixed(6)}</p>
-            <p><strong>Current Water Level:</strong> <span style="color: ${markerColor}; font-weight: bold;">${(sensor as any).water_level || 'N/A'}m</span></p>
-            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
-              <p style="margin: 2px 0; font-size: 12px;"><strong>Alert:</strong> ${(sensor as any).alert || 'N/A'}m</p>
-              <p style="margin: 2px 0; font-size: 12px;"><strong>Alarm:</strong> ${(sensor as any).alarm || 'N/A'}m</p>
-              <p style="margin: 2px 0; font-size: 12px;"><strong>Critical:</strong> ${(sensor as any).critical || 'N/A'}m</p>
-            </div>
-          </div>
-        `
+              <div class="popup-content">
+                <h3 class="popup-title">${sensorName}</h3>
+                <p><strong>Coordinates:</strong> ${lat.toFixed(6)}, ${lng.toFixed(6)}</p>
+                <p><strong>Current Water Level:</strong> <span style="color: ${markerColor}; font-weight: bold;">${(sensor as any).water_level || 'N/A'}m</span></p>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
+                  <p style="margin: 2px 0; font-size: 12px;"><strong>Alert:</strong> ${(sensor as any).alert || 'N/A'}m</p>
+                  <p style="margin: 2px 0; font-size: 12px;"><strong>Alarm:</strong> ${(sensor as any).alarm || 'N/A'}m</p>
+                  <p style="margin: 2px 0; font-size: 12px;"><strong>Critical:</strong> ${(sensor as any).critical || 'N/A'}m</p>
+                </div>
+              </div>
+            `
 
                 // Create custom marker element - slightly larger for better visibility
                 const markerElement = document.createElement('div')
@@ -424,7 +386,7 @@ function MapView() {
 
             // Create flood tiles visualization using detailed sensor data
             const floodTilesGeoJSON = createFloodTilesGeoJSON(sensorsData)
-            
+
             // Add flood tiles source
             map.addSource('flood-tiles', {
                 type: 'geojson',
@@ -647,6 +609,7 @@ function MapView() {
         }
     }, [sensorsData, connectionState, setSelectedSensor])
 
+
     // Update route on the map when routeGeometry changes
     useEffect(() => {
         if (!mapRef.current) return;
@@ -808,7 +771,7 @@ function MapView() {
 
             <Legend />
             <div id="map-container" ref={mapContainerRef} />
-            
+
             <EmergencyContacts
                 isVisible={showEmergencyContacts}
                 onClose={() => setShowEmergencyContacts(false)}
@@ -825,42 +788,12 @@ function MapView() {
             />
 
             {/* Connection status indicator */}
-            <div 
-                style={{
-                    position: 'absolute',
-                    bottom: '60px',
-                    right: '10px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                    zIndex: 1000,
-                    border: `2px solid ${connectionDisplay.borderColor}`,
-                    cursor: connectionState === 'error' || connectionState === 'disconnected' ? 'pointer' : 'default'
-                }}
-                onClick={connectionState === 'error' || connectionState === 'disconnected' ? handleManualReconnect : undefined}
-            >
-                <div style={{ 
-                    color: connectionDisplay.color,
-                    fontWeight: 'bold',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    <span>{connectionDisplay.emoji}</span>
-                    {connectionDisplay.text}
-                    {connectionState === 'connected' && ` (${sensorsData.length} sensors)`}
-                </div>
-                {lastUpdateTime && (
-                    <div style={{ color: '#666', fontSize: '10px', marginTop: '2px' }}>
-                        Last update: {new Date(lastUpdateTime).toLocaleTimeString()}
-                    </div>
-                )}
-                <div style={{ color: '#666', fontSize: '10px', marginTop: '2px' }}>
-                    {connectionDisplay.subtext}
-                </div>
-            </div>
+            <ConnectionStatus
+                connectionState={connectionState}
+                sensorsData={sensorsData}
+                lastUpdateTime={lastUpdateTime}
+                onReconnect={handleManualReconnect}
+            />
         </>
     )
 }
